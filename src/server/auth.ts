@@ -8,7 +8,7 @@ import {
 import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "~/env";
 import { db } from "~/server/db";
-
+import bcrypt from "bcrypt";
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -55,26 +55,49 @@ export const authOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "email@gmail.com" },
-        password: { label: "Password", type: "password" },
+        email: {
+          label: "Email",
+          type: "text",
+          placeholder: "email@gmail.com",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "password here",
+        },
       },
       async authorize(credentials, req) {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid.
-        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-        // You can also use the `req` object to obtain additional parameters
-        // (i.e., the request IP address)
+        let { email, password } = credentials as Record<
+          "email" | "password",
+          string
+        >;
+
         const user = await db.user.findUnique({
-          where: { email: credentials?.email, password: credentials.password },
+          where: {
+            email,
+          },
         });
 
-        // If no error and we have user data, return it
-        if (user) {
-          return user;
+        if (!user) {
+          console.log("User not found");
+          // Return null if user data could not be retrieved
+          return null;
         }
-        // Return null if user data could not be retrieved
-        return null;
+
+        password = bcrypt.hashSync(password, 10);
+
+        const isPasswordValid = await bcrypt.compare(
+          credentials?.password as string,
+          password,
+        );
+
+        if (!isPasswordValid) {
+          console.log("Is password valid? ", isPasswordValid);
+          // Return null if user data could not be retrieved
+          return null;
+        }
+
+        return user;
       },
     }),
     /**
@@ -87,6 +110,13 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  pages: {
+    // // signIn: "/signin",
+    // signOut: "/auth/signout",
+    // error: "/auth/error", // Error code passed in query string as ?error=
+    // verifyRequest: "/auth/verify-request", // (used for check email message)
+    // newUser: null, // If set, new users will be directed here on first sign in
+  },
 };
 
 /**

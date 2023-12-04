@@ -1,12 +1,19 @@
+"use client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useEffect } from "react";
 
 import { api } from "~/utils/api";
 
 export default function Home() {
+  const { data: sessionData } = useSession();
+
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
 
+  useEffect(() => {
+    console.log(sessionData?.user);
+  }, [sessionData]);
   return (
     <>
       <Head>
@@ -60,7 +67,7 @@ function AuthShowcase() {
 
   const { data: secretMessage } = api.post.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: sessionData?.user !== undefined }
+    { enabled: sessionData?.user !== undefined },
   );
 
   return (
