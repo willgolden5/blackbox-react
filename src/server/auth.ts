@@ -37,13 +37,20 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    jwt({ token, user }) {
+      /* User table contents is exposed in tokens */
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    session({ session, token, user }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        // session.user.role = user.role; <-- put other properties on the session here
+      }
+      return session;
+    },
   },
   adapter: PrismaAdapter(db),
   providers: [
@@ -96,7 +103,7 @@ export const authOptions: NextAuthOptions = {
           // Return null if user data could not be retrieved
           return null;
         }
-
+        console.log("User found", user);
         return user;
       },
     }),
@@ -111,12 +118,18 @@ export const authOptions: NextAuthOptions = {
      */
   ],
   pages: {
-    // // signIn: "/signin",
+    signIn: "/signin",
     // signOut: "/auth/signout",
     // error: "/auth/error", // Error code passed in query string as ?error=
     // verifyRequest: "/auth/verify-request", // (used for check email message)
     // newUser: null, // If set, new users will be directed here on first sign in
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  secret: env.NEXTAUTH_SECRET,
 };
 
 /**

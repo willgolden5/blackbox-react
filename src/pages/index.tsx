@@ -12,7 +12,7 @@ export default function Home() {
   const hello = api.post.hello.useQuery({ text: "from tRPC" });
 
   useEffect(() => {
-    console.log(sessionData?.user);
+    console.log(sessionData);
   }, [sessionData]);
   return (
     <>
