@@ -9,7 +9,7 @@ import { api } from "~/utils/api";
 export default function Home() {
   const { data: sessionData } = useSession();
 
-  const hello = api.post.hello.useQuery({ text: "from tRPC" });
+  const hello = api.post.hello.useQuery({ text: "wtgolden5@gmail.com" });
 
   useEffect(() => {
     console.log(sessionData);

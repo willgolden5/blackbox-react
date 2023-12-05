@@ -1,4 +1,7 @@
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { api } from "~/utils/api";
 
 interface IFormInput {
   firstName: string;
@@ -9,15 +12,29 @@ interface IFormInput {
 }
 
 const SignUp = () => {
+  const [userExists, setUserExists] = useState(false);
+  const router = useRouter();
+  const { mutateAsync: createUser } = api.user.create.useMutation();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
 
-  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    // Sign-up logic goes here
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
+    const createData = await createUser({
+      name: `${formData.firstName} ${formData.lastName}`,
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phoneNumber,
+    });
+    if (createData === "user already exists") {
+      setUserExists(true);
+    } else {
+      router.push("/signin");
+    }
+    console.log(createData);
   };
 
   return (
@@ -142,8 +159,10 @@ const SignUp = () => {
                 </p>
               )}
             </div>
+            {userExists && (
+              <p className="px-2 text-red-600">This user already exists.</p>
+            )}
           </div>
-
           <div>
             <button
               type="submit"
