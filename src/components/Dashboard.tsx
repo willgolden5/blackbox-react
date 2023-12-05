@@ -22,8 +22,8 @@ const Dashboard: React.FC = () => {
   const activeStrategy = strategies[0]; // This would be dynamic in a real app
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="mb-6 text-3xl font-bold">Trade Dashboard</h1>
+    <div className="container mx-auto flex flex-col p-4">
+      <h1 className="mb-6 ml-auto mr-auto text-3xl font-bold">Dashboard</h1>
       <section
         aria-label="Portfolio Information"
         className="flex w-full justify-center"
@@ -35,15 +35,17 @@ const Dashboard: React.FC = () => {
               <>
                 <div className="w-full">
                   <p className="pb-2">Balance: ${balance.toFixed(2)}</p>
-                  <p className="">Active Strategy: {activeStrategy?.name}</p>
-                  <div className="flex w-full flex-col space-y-2">
-                    <Button className="bg-yellow rounded px-4 py-2 text-white hover:bg-green-600">
+                  <p className="pb-6">
+                    Active Strategy: {activeStrategy?.name}
+                  </p>
+                  <div className="flex w-full flex-col space-y-5">
+                    <Button className="bg-yellow rounded px-4 py-2">
                       Manage Alpaca Account
                     </Button>
-                    <Button className="bg-green rounded px-4 py-2 text-white hover:bg-green-600">
+                    <Button className="bg-green rounded px-4 py-2">
                       Fund your Account
                     </Button>
-                    <Button className="bg-orange rounded px-4 py-2 text-white ">
+                    <Button className="bg-orange rounded px-4 py-2">
                       Liquidate All Positions
                     </Button>
                   </div>
