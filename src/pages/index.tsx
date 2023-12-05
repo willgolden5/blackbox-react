@@ -5,8 +5,6 @@ import { useRouter } from "next/router";
 import Dashboard from "~/components/Dashboard";
 import Navbar from "~/components/Navbar";
 
-import { api } from "~/utils/api";
-
 export default function Home() {
   const router = useRouter();
   const { status } = useSession();
@@ -22,7 +20,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <main className=" flex min-h-screen flex-col items-center justify-center">
+      <main className="flex min-h-screen flex-col items-center justify-center">
         <Dashboard />
       </main>
     </>

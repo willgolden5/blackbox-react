@@ -45,9 +45,9 @@ const TradeForm: React.FC<TradeFormProps> = ({
           onSubmit={handleSubmit(onSubmit)}
           className="flex h-full w-full flex-col rounded-lg p-4"
         >
-          <div className="flex flex-col items-center space-y-4">
+          <div className="flex flex-col items-center space-y-5">
             <div className="items-left flex w-full flex-col  ">
-              <label htmlFor="strategy-picker" className="font-semibold">
+              <label htmlFor="strategy-picker" className="">
                 Strategy:
               </label>
               <Select
@@ -61,7 +61,7 @@ const TradeForm: React.FC<TradeFormProps> = ({
               />
             </div>
             <div className="flex flex w-full flex-col">
-              <label htmlFor="amount" className="font-semibold">
+              <label htmlFor="amount" className="">
                 Amount:
               </label>
               <Input
@@ -79,9 +79,9 @@ const TradeForm: React.FC<TradeFormProps> = ({
           </div>
           <Button
             type="submit"
-            className="bg-green mt-8 w-full rounded px-4 py-2 text-white hover:bg-gray-800"
+            className="bg-green mt-2 w-full rounded px-4 py-2"
           >
-            Trade
+            TRADE
           </Button>
         </form>
       }

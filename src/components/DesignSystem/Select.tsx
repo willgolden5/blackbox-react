@@ -33,7 +33,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             opacity: isActiveDropdown ? "1" : "0",
             visibility: isActiveDropdown ? "visible" : "hidden",
           }}
-          className="absolute left-0 w-full rounded-md border-2 border-black text-center font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+          className="absolute left-0 z-30 w-full rounded-md border-2 border-black text-center font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
         >
           <select ref={ref} {...rest} className="hidden">
             {items.map((item, index) => (
@@ -43,9 +43,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ))}
           </select>
           {items.map((item, index) => (
-            <a
+            <p
               key={index}
-              href="#"
               className="block w-full border-b-2 border-black bg-[#bc95d4] px-7 py-3 first:rounded-t-[5px] last:rounded-b-[5px] hover:bg-[#a36ec4]"
               onClick={(e) => {
                 e.preventDefault();
@@ -54,7 +53,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               }}
             >
               {item.name}
-            </a>
+            </p>
           ))}
         </div>
       </div>

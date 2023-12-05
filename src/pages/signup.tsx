@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import Button from "~/components/DesignSystem/Button";
+import Input from "~/components/DesignSystem/Input";
 import { api } from "~/utils/api";
 
 interface IFormInput {
@@ -41,11 +43,11 @@ const SignUp = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-4xl font-bold text-black">
             Sign Up
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Please create an account to use blackbox.
+          <p className="font-md mt-2 text-center text-black">
+            Please create an account to use Blackbox.
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -57,11 +59,10 @@ const SignUp = () => {
               >
                 First Name
               </label>
-              <input
+              <Input
                 id="firstName"
                 type="text"
                 required
-                className="mt-1 block h-8 w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder="John"
                 {...register("firstName", {
                   required: "First name is required",
@@ -80,11 +81,10 @@ const SignUp = () => {
               >
                 Last Name
               </label>
-              <input
+              <Input
                 id="lastName"
                 type="text"
                 required
-                className="mt-1 block h-8 w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder="Doe"
                 {...register("lastName", { required: "Last name is required" })}
               />
@@ -101,11 +101,10 @@ const SignUp = () => {
               >
                 Email address
               </label>
-              <input
+              <Input
                 id="email"
                 type="email"
                 required
-                className="mt-1 block h-8 w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder="john.doe@example.com"
                 {...register("email", { required: "Email is required" })}
               />
@@ -122,11 +121,10 @@ const SignUp = () => {
               >
                 Password
               </label>
-              <input
+              <Input
                 id="password"
                 type="password"
                 required
-                className="mt-1 block h-8 w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder="••••••••"
                 {...register("password", { required: "Password is required" })}
               />
@@ -143,11 +141,10 @@ const SignUp = () => {
               >
                 Phone Number
               </label>
-              <input
+              <Input
                 id="phoneNumber"
                 type="tel"
                 required
-                className="mt-1 block h-8 w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 placeholder="(555) 555-5555"
                 {...register("phoneNumber", {
                   required: "Phone number is required",
@@ -164,19 +161,13 @@ const SignUp = () => {
             )}
           </div>
           <div>
-            <button
-              type="submit"
-              className="relative flex w-full justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
-            >
+            <Button type="submit" className=" w-full">
               Sign Up
-            </button>
+            </Button>
           </div>
         </form>
         <div className="mt-6 text-center">
-          <a
-            href="/signin"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
+          <a href="/signin" className="hover:text-purple text-sm text-gray-700">
             Already have an account? Sign in
           </a>
         </div>
