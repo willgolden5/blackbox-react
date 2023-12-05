@@ -1,11 +1,6 @@
 import { signIn } from "next-auth/react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
-interface IFormInput {
-  email: string;
-  password: string;
-}
-
 const SignIn = () => {
   const {
     register,
@@ -86,17 +81,9 @@ const SignIn = () => {
             </button>
           </div>
         </form>
-        <div className="mt-6">
-          <button
-            type="button"
-            className="group relative flex w-full justify-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-sm font-medium text-black hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
-          >
-            Login with Alpaca
-          </button>
-        </div>
         <div className="mt-6 text-center">
           <a
-            href="#"
+            href="/signup"
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             Don't have an account? Sign up
