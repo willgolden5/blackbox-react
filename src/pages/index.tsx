@@ -12,6 +12,13 @@ export default function Home() {
   if (status === "unauthenticated") {
     router.push("/signin");
   }
+  if (status === "loading") {
+    return (
+      <div className="font-2xl flex min-h-screen items-center justify-center px-4 py-12 text-2xl font-bold sm:px-6 lg:px-8">
+        Loading...
+      </div>
+    );
+  }
   return (
     <>
       <Head>
