@@ -8,7 +8,8 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ items, ...rest }, ref) => {
     const [isActiveDropdown, setIsActiveDropdown] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(items[0].name); // Default to the first item
+    const firstItem = items[0] as { name: string; value: string };
+    const [selectedItem, setSelectedItem] = useState(firstItem.name);
 
     return (
       <div className="relative w-full">

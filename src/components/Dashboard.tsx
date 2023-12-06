@@ -42,14 +42,22 @@ const Dashboard: React.FC = () => {
                     Active Strategy: {activeStrategy?.name}
                   </p>
                   <div className="flex w-full flex-col space-y-5">
-                    <a href="https://app.alpaca.markets/brokerage/dashboard/overview"></a>
-                    <Button className="bg-yellow rounded px-4 py-2">
-                      Manage Alpaca Account
-                    </Button>
-                    <a href="https://app.alpaca.markets/brokerage/banking?transfer=deposit"></a>
-                    <Button className="bg-green rounded px-4 py-2">
-                      Fund your Account
-                    </Button>
+                    <a
+                      className="flex w-full flex-col space-y-5"
+                      href="https://app.alpaca.markets/brokerage/dashboard/overview"
+                    >
+                      <Button className="bg-yellow rounded px-4 py-2">
+                        Manage Alpaca Account
+                      </Button>
+                    </a>
+                    <a
+                      className="flex w-full flex-col space-y-5"
+                      href="https://app.alpaca.markets/brokerage/banking?transfer=deposit"
+                    >
+                      <Button className="bg-green rounded px-4 py-2">
+                        Fund your Account
+                      </Button>
+                    </a>
                     <Button className="bg-orange rounded px-4 py-2">
                       Liquidate All Positions
                     </Button>
