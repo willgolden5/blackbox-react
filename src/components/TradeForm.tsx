@@ -71,18 +71,18 @@ const TradeForm: React.FC<TradeFormProps> = ({
                 {...register("amount", { required: "Amount is required" })}
               />
               {errors.amount && (
-                <p className="px-2 pt-2 text-xs italic text-red-500">
+                <p className="mt-2 px-2 text-xs italic text-red-500">
                   {errors.amount.message}
                 </p>
               )}
             </div>
+            <Button
+              type="submit"
+              className="bg-green mt-2 w-full rounded px-4 py-2"
+            >
+              TRADE
+            </Button>
           </div>
-          <Button
-            type="submit"
-            className="bg-green mt-2 w-full rounded px-4 py-2"
-          >
-            TRADE
-          </Button>
         </form>
       }
     />
