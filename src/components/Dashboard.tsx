@@ -1,24 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TradeForm from "./TradeForm";
 import Card from "./DesignSystem/Card";
 import Button from "./DesignSystem/Button";
+import { api } from "~/utils/api";
 
 // Assuming you have a type for the strategy data
 type Strategy = {
   name: string;
-  cagr: number;
-  beta: number;
-  sharpe: number;
+  id: string;
 };
 
 const strategies: Strategy[] = [
-  { name: "US Congress Long", cagr: 3, beta: -9, sharpe: 1.19 },
+  { name: "US Congress Long", id: "us-congress-long" },
+  { name: "Nancy Pelosi", id: "nancy-pelosi" },
   // ... other strategies
 ];
 
 const Dashboard: React.FC = () => {
+  const { data: alpData } = api.alpaca.getAccount.useQuery();
   // Replace with state, context, or props as necessary
-  const balance = 2000.0;
   const activeStrategy = strategies[0]; // This would be dynamic in a real app
 
   return (
@@ -34,14 +34,19 @@ const Dashboard: React.FC = () => {
             body={
               <>
                 <div className="w-full">
-                  <p className="pb-2">Balance: ${balance.toFixed(2)}</p>
+                  <p className="pb-2">
+                    Portfolio Value: ${alpData?.portfolio_value}
+                  </p>
+                  <p className="pb-2">Balance: ${alpData?.cash}</p>
                   <p className="pb-6">
                     Active Strategy: {activeStrategy?.name}
                   </p>
                   <div className="flex w-full flex-col space-y-5">
+                    <a href="https://app.alpaca.markets/brokerage/dashboard/overview"></a>
                     <Button className="bg-yellow rounded px-4 py-2">
                       Manage Alpaca Account
                     </Button>
+                    <a href="https://app.alpaca.markets/brokerage/banking?transfer=deposit"></a>
                     <Button className="bg-green rounded px-4 py-2">
                       Fund your Account
                     </Button>

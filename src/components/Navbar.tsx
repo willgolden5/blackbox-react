@@ -8,7 +8,6 @@ const Navbar = () => {
           <svg
             stroke="currentColor"
             fill="currentColor"
-            stroke-width="0"
             viewBox="0 0 448 512"
             className="m500:h-4 m500:w-4 h-6 w-6"
             height="1em"

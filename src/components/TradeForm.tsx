@@ -12,9 +12,7 @@ type TradeFormData = {
 
 type Strategy = {
   name: string;
-  cagr: number;
-  beta: number;
-  sharpe: number;
+  id: string;
 };
 
 interface TradeFormProps {
