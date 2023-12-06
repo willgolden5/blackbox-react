@@ -26,9 +26,9 @@ const Dashboard: React.FC = () => {
       <h1 className="mb-6 ml-auto mr-auto text-3xl font-bold">Dashboard</h1>
       <section
         aria-label="Portfolio Information"
-        className="flex w-full justify-center"
+        className="flex w-full flex-col items-center justify-center md:flex-row md:items-stretch"
       >
-        <div className="mr-4 w-[75%]">
+        <div className="mr-4 w-[75%] pb-8">
           <Card
             heading="Your Portfolio:"
             body={
