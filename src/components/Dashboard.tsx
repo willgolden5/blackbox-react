@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import TradeForm from "./TradeForm";
 import Card from "./DesignSystem/Card";
 import Button from "./DesignSystem/Button";
