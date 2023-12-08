@@ -251,11 +251,11 @@ const SignUp = () => {
     console.log(createData);
   };
   // for now return a div with centered text saying Coming Soon!
-  // return (
-  //   <div className="font-2xl flex min-h-screen items-center justify-center px-4 py-12 text-2xl font-bold sm:px-6 lg:px-8">
-  //     Coming Soon!
-  //   </div>
-  // );
+  return (
+    <div className="font-2xl flex min-h-screen items-center justify-center px-4 py-12 text-2xl font-bold sm:px-6 lg:px-8">
+      Coming Soon!
+    </div>
+  );
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
