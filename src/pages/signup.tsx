@@ -186,7 +186,11 @@ const SignUp = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {currentPanel === 0 && <PanelZero />}
           {currentPanel === 1 && (
-            <PanelOne userExists errors={errors} register={register} />
+            <PanelOne
+              userExists={userExists}
+              errors={errors}
+              register={register}
+            />
           )}
           <div>
             {currentPanel === 5 ? (
