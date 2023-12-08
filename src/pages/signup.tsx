@@ -25,13 +25,13 @@ const PanelZero = () => {
   );
 };
 
-type PanelOneProps = {
+type PanelProps = {
   userExists: boolean;
   register: any;
   errors: any;
 };
 
-const PanelOne = ({ userExists, register, errors }: PanelOneProps) => {
+const PanelOne = ({ userExists, register, errors }: PanelProps) => {
   return (
     <div className="space-y-2">
       <div className="p-2">
@@ -144,6 +144,86 @@ const PanelOne = ({ userExists, register, errors }: PanelOneProps) => {
   );
 };
 
+const PanelTwo = ({ register, errors }: PanelProps) => {
+  return (
+    <div className="space-y-2">
+      {Array.from({ length: 2 }, (_, index) => (
+        <div className="p-2" key={index}>
+          <label
+            htmlFor={`streetAddress${index}`}
+            className="block text-sm font-medium text-gray-700"
+          >
+            Street Address {index + 1}
+          </label>
+          <Input
+            id={`streetAddress${index}`}
+            type="text"
+            {...register(`streetAddress[${index}]`)}
+          />
+          {errors.streetAddress && errors.streetAddress[index] && (
+            <p className="text-xs italic text-red-500">
+              {errors.streetAddress[index].message}
+            </p>
+          )}
+        </div>
+      ))}
+      <div className="p-2">
+        <label
+          htmlFor="city"
+          className="block text-sm font-medium text-gray-700"
+        >
+          City
+        </label>
+        <Input
+          id="city"
+          type="text"
+          required
+          {...register("city", { required: "City is required" })}
+        />
+        {errors.city && (
+          <p className="text-xs italic text-red-500">{errors.city.message}</p>
+        )}
+      </div>
+      <div className="p-2">
+        <label
+          htmlFor="state"
+          className="block text-sm font-medium text-gray-700"
+        >
+          State
+        </label>
+        <Input
+          id="state"
+          type="text"
+          required
+          {...register("state", { required: "State is required" })}
+        />
+        {errors.state && (
+          <p className="text-xs italic text-red-500">{errors.state.message}</p>
+        )}
+      </div>
+      <div className="p-2">
+        <label
+          htmlFor="postalCode"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Postal Code
+        </label>
+        <Input
+          id="postalCode"
+          type="text"
+          required
+          {...register("postalCode", { required: "Postal code is required" })}
+        />
+        {errors.postalCode && (
+          <p className="text-xs italic text-red-500">
+            {errors.postalCode.message}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const SignUp = () => {
   const [currentPanel, setCurrentPanel] = useState(0);
   const [userExists, setUserExists] = useState(false);
@@ -179,14 +259,21 @@ const SignUp = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
+      <div className="w-full max-w-md space-y-2">
         <h2 className="mt-6 text-center text-4xl font-bold text-black">
-          Sign Up
+          Blackbox Account Setup
         </h2>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {currentPanel === 0 && <PanelZero />}
           {currentPanel === 1 && (
             <PanelOne
+              userExists={userExists}
+              errors={errors}
+              register={register}
+            />
+          )}
+          {currentPanel === 2 && (
+            <PanelTwo
               userExists={userExists}
               errors={errors}
               register={register}
