@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "~/components/DesignSystem/Button";
 import Input from "~/components/DesignSystem/Input";
+import Newsletter from "~/components/DesignSystem/Newsletter";
 import { api } from "~/utils/api";
 
 interface IFormInput {
@@ -253,7 +254,7 @@ const SignUp = () => {
   // for now return a div with centered text saying Coming Soon!
   return (
     <div className="font-2xl flex min-h-screen items-center justify-center px-4 py-12 text-2xl font-bold sm:px-6 lg:px-8">
-      Coming Soon!
+      <Newsletter />
     </div>
   );
 

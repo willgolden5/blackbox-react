@@ -49,4 +49,13 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+  interestSignup: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.interestList.create({
+        data: {
+          email: input.email,
+        },
+      });
+    }),
 });

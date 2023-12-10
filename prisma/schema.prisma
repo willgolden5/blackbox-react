@@ -26,9 +26,7 @@ model User {
   phone            String?
   alpacaId         String?
   ActiveStrategies ActiveStrategies[]
-  PaidUsers        PaidUsers[]
   sessions         Session[]
-  Strategy         Strategy[]
 }
 
 model PaidUsers {
@@ -37,7 +35,6 @@ model PaidUsers {
   membershipType String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -49,22 +46,17 @@ model VerificationToken {
 }
 
 model Strategy {
-  id             String           @id @default(cuid())
-  name           String
-  description    String
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  userId         String?
-  RebalanceDates RebalanceDates[]
-  User           User?            @relation(fields: [userId], references: [id])
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  createdAt   DateTime @default(now())
+  userId      String?
 }
 
 model RebalanceDates {
-  id            String   @id @default(cuid())
-  strategyId    String
   lastRebalance DateTime
   nextRebalance DateTime
-  strategy      Strategy @relation(fields: [strategyId], references: [id])
+  strategy      String   @unique
 }
 
 model ActiveStrategies {
@@ -75,4 +67,41 @@ model ActiveStrategies {
   activatedAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CongressBuys {
+  ticker        String   @unique
+  createdAt     DateTime
+  updatedAt     DateTime
+  navPercentage Float
+}
+
+model InterestList {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CongressLongShort {
+  ticker        String   @unique
+  createdAt     DateTime
+  updatedAt     DateTime
+  navPercentage Float
+}
+
+model NancyPelosi {
+  ticker        String   @unique
+  navPercentage Float
+  updatedAt     DateTime
+  createdAt     DateTime
+}
+
+model TradeErrors {
+  id         String   @id
+  userId     String
+  strategyId String
+  error      String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
 }
