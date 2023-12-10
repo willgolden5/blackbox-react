@@ -18,8 +18,25 @@ interface IFormInput {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
   phoneNumber: string;
+  password: string;
+  streetAddress: string[];
+  city: string;
+  state: string;
+  postalCode: string;
+  dateOfBirth: string;
+  taxId: string;
+  taxIdType: string;
+  countryOfTaxResidence: string;
+  fundingSource: string[];
+  employmentStatus: string;
+  employerName: string;
+  employmentPosition: string;
+  isControlPerson: boolean;
+  isAffiliatedExchangeOrFinra: boolean;
+  isPoliticallyExposed: boolean;
+  immediateFamilyExposed: boolean;
+  customerAgreementConsent: boolean;
 }
 
 const PanelZero = () => {
@@ -426,6 +443,7 @@ const SignUp = () => {
   const [userExists, setUserExists] = useState(false);
   const router = useRouter();
   const { mutateAsync: createUser } = api.user.create.useMutation();
+  const { mutateAsync: alpacaCreate } = api.user.alpacaCreate.useMutation();
 
   const {
     register,
@@ -445,6 +463,49 @@ const SignUp = () => {
     if (createData === "user already exists") {
       setUserExists(true);
     } else {
+      const alpacaData = await alpacaCreate({
+        contact: {
+          email_address: formData.email,
+          phone_number: formData.phoneNumber,
+          street_address: formData.streetAddress,
+          unit: formData.streetAddress[1] || "",
+          city: formData.city,
+          state: formData.state,
+          postal_code: formData.postalCode,
+        },
+        identity: {
+          tax_id_type: formData.taxIdType,
+          given_name: formData.firstName,
+          family_name: formData.lastName,
+          date_of_birth: formData.dateOfBirth,
+          tax_id: formData.taxId,
+          country_of_citizenship: formData.countryOfTaxResidence, // Assuming citizenship is the same as tax residence
+          country_of_birth: formData.countryOfTaxResidence, // Assuming birth country is the same as tax residence
+          country_of_tax_residence: formData.countryOfTaxResidence,
+          funding_source: formData.fundingSource,
+        },
+        disclosures: {
+          is_control_person: formData.isControlPerson,
+          is_affiliated_exchange_or_finra: formData.isAffiliatedExchangeOrFinra,
+          is_politically_exposed: formData.isPoliticallyExposed,
+          immediate_family_exposed: formData.immediateFamilyExposed,
+        },
+        trusted_contact: {
+          given_name: "", // Placeholder, update with actual data
+          family_name: "", // Placeholder, update with actual data
+          email_address: "", // Placeholder, update with actual data
+        },
+        agreements: [
+          {
+            agreement: "customer_agreement",
+            signed_at: new Date().toISOString(), // Assuming the current date/time
+            ip_address: "192.0.2.1", // Placeholder, update with actual data
+            revision: "string", // Placeholder, update with actual data
+          },
+        ],
+        enabled_assets: ["us_equity"], // Assuming default asset
+      });
+      console.log(alpacaData);
       router.push("/signin");
     }
     console.log(createData);
