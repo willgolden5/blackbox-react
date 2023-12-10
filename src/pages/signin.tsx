@@ -21,13 +21,15 @@ const SignIn = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-8 rounded-md border-2 border-black bg-offWhite p-8 font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+      <div className="w-full max-w-md space-y-8 rounded-md border-2 border-black bg-offWhite p-8 text-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold text-black">
+          <h1 className="relative text-5xl font-bold">
             Blackbox
-          </h2>
-          <p className="text-md mt-2 text-center text-black">
-            Welcome to the Blackbox. Please login to continue.
+            <span className="z-4 absolute bottom-2 left-20 h-[26%] w-[216px] rounded-sm bg-purple opacity-30"></span>
+          </h1>
+          <p className="text-md mt-2 text-center font-normal text-gray-700">
+            Trade with market insiders. From Washington to Silicon Valley.
+            Please login to continue.
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
