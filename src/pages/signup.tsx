@@ -8,7 +8,7 @@ import Select from "~/components/DesignSystem/Select";
 import { api } from "~/utils/api";
 
 const DisclosuresPanel = dynamic(
-  () => import("../components/SignUpPanels/Disclosures"),
+  () => import("../components/SignUpPanels/Agreements"),
   {
     ssr: false,
   },
@@ -24,7 +24,7 @@ interface IFormInput {
 
 const PanelZero = () => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex w-full max-w-md">
       <p className="font-md mt-2 text-center text-black">
         Please create an account to use Blackbox. We use Alpaca.markets under
         the hood as our brokerage partner and will be asking you some questions
@@ -42,7 +42,7 @@ type PanelProps = {
 
 const PanelOne = ({ userExists, register, errors }: PanelProps) => {
   return (
-    <div className="space-y-2">
+    <div className="w-full max-w-md space-y-2">
       <div className="p-2">
         <label
           htmlFor="firstName"
@@ -155,7 +155,7 @@ const PanelOne = ({ userExists, register, errors }: PanelProps) => {
 
 const PanelTwo = ({ register, errors }: PanelProps) => {
   return (
-    <div className="space-y-2">
+    <div className="w-full max-w-md space-y-2">
       {Array.from({ length: 2 }, (_, index) => (
         <div className="p-2" key={index}>
           <label
@@ -235,7 +235,7 @@ const PanelTwo = ({ register, errors }: PanelProps) => {
 
 const PanelThree = ({ register, errors }: PanelProps) => {
   return (
-    <div className="space-y-2">
+    <div className="w-full max-w-md space-y-2">
       <div className="p-2">
         <label
           htmlFor="dateOfBirth"
@@ -310,7 +310,7 @@ const PanelThree = ({ register, errors }: PanelProps) => {
 
 const PanelFour = ({ register, errors }: PanelProps) => {
   return (
-    <div className="space-y-2">
+    <div className="w-full max-w-md space-y-2">
       {/* ... other fields ... */}
 
       <div className="p-2">
@@ -431,6 +431,7 @@ const SignUp = () => {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
@@ -449,12 +450,15 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-2">
+    <div className="flex min-h-screen w-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex w-full flex-col items-center justify-center space-y-2">
         <h2 className="mt-6 text-center text-4xl font-bold text-black">
           Blackbox Account Setup
         </h2>
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className="flex w-full flex-col items-center justify-center space-y-6 text-left"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           {currentPanel === 0 && <PanelZero />}
           {currentPanel === 1 && (
             <PanelOne
@@ -486,14 +490,14 @@ const SignUp = () => {
           )}
           {currentPanel === 5 && (
             <DisclosuresPanel
-              userExists={userExists}
+              control={control}
               errors={errors}
               register={register}
             />
           )}
-          <div>
+          <div className="w-full max-w-md">
             {currentPanel === 6 ? (
-              <div className="4 flex space-x-2">
+              <div className="flex w-full max-w-md space-x-2">
                 {currentPanel > 0 && (
                   <Button
                     onClick={() => setCurrentPanel(currentPanel - 1)}
@@ -507,7 +511,7 @@ const SignUp = () => {
                 </Button>
               </div>
             ) : (
-              <div className="4 flex space-x-2">
+              <div className="flex w-full max-w-md space-x-2">
                 {currentPanel > 0 && (
                   <Button
                     onClick={() => setCurrentPanel(currentPanel - 1)}
