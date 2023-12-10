@@ -496,7 +496,7 @@ const SignUp = () => {
             />
           )}
           <div className="w-full max-w-md">
-            {currentPanel === 6 ? (
+            {currentPanel === 6 && (
               <div className="flex w-full max-w-md space-x-2">
                 {currentPanel > 0 && (
                   <Button
@@ -510,26 +510,27 @@ const SignUp = () => {
                   Submit
                 </Button>
               </div>
-            ) : (
-              <div className="flex w-full max-w-md space-x-2">
-                {currentPanel > 0 && (
-                  <Button
-                    onClick={() => setCurrentPanel(currentPanel - 1)}
-                    className=" w-[33%] bg-orange"
-                  >
-                    Back
-                  </Button>
-                )}
-                <Button
-                  onClick={() => setCurrentPanel(currentPanel + 1)}
-                  className=" w-full bg-green"
-                >
-                  Next
-                </Button>
-              </div>
             )}
           </div>
         </form>
+        {currentPanel < 6 && (
+          <div className="flex w-full max-w-md space-x-2">
+            {currentPanel > 0 && (
+              <Button
+                onClick={() => setCurrentPanel(currentPanel - 1)}
+                className=" w-[33%] bg-orange"
+              >
+                Back
+              </Button>
+            )}
+            <Button
+              onClick={() => setCurrentPanel(currentPanel + 1)}
+              className=" w-full bg-green"
+            >
+              Next
+            </Button>
+          </div>
+        )}
         <div className="mt-6 text-center">
           <a href="/signin" className="text-sm text-gray-700 hover:text-purple">
             Already have an account? Sign in

@@ -91,7 +91,7 @@ const AgreementsPanel = ({
   }
   return (
     <div
-      className="max-w-[calc(100% - 2em)] w-full space-y-4 p-2"
+      className="max-w-[calc(100% - 2em)] flex w-[75%] flex-col items-center space-y-4  align-middle"
       ref={setContainerRef}
     >
       {questionsAndAnswers.map((item, index) => (
@@ -103,6 +103,19 @@ const AgreementsPanel = ({
           control={control}
         />
       ))}
+      <div className="p-2">
+        <label htmlFor="customerAgreementConsent" className="flex items-center">
+          <input
+            type="checkbox"
+            id="customerAgreementConsent"
+            {...register("customerAgreementConsent")}
+          />
+          <span className="text-md ml-2 text-gray-700">
+            I have read and agree to the Alpaca Customer Agreement and Alpaca
+            Margin Agreement.
+          </span>
+        </label>
+      </div>
     </div>
   );
 };
