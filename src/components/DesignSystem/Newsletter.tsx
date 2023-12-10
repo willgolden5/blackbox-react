@@ -19,7 +19,7 @@ export default function Newsletter() {
     <div className="flex flex-col space-y-4 text-center">
       <h1 className=" relative text-5xl font-bold">
         Blackbox
-        <span className="absolute bottom-2 right-48 h-[26%] w-[216px] rounded-sm bg-purple opacity-30"></span>
+        <span className="absolute bottom-2 right-48 hidden h-[26%] w-[216px] rounded-sm bg-purple opacity-30 md:block"></span>
       </h1>
       <p className="text-center text-lg font-light text-gray-700">
         Sign up to be notified when registration goes live.
@@ -30,7 +30,7 @@ export default function Newsletter() {
         role="form"
       >
         <input
-          className="w-[30ch] rounded-md p-[10px] outline-none"
+          className="rounded-md p-[10px] outline-none md:w-[30ch]"
           type="text"
           name="email"
           id="email"
