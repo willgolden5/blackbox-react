@@ -16,10 +16,10 @@ export default function Newsletter() {
   };
 
   return (
-    <div className="flex flex-col space-y-6 text-center">
-      <h1 className=" z-2 relative text-4xl font-bold">
-        Blackbox{" "}
-        <span className="absolute bottom-2 right-56 h-[26%] w-[153px] rounded-sm bg-purple opacity-30"></span>
+    <div className="flex flex-col space-y-4 text-center">
+      <h1 className=" relative text-5xl font-bold">
+        Blackbox
+        <span className="z-4 absolute bottom-2 right-48 h-[26%] w-[216px] rounded-sm bg-purple opacity-30"></span>
       </h1>
       <p className="text-center text-lg font-light text-gray-700">
         Sign up to be notified when registration goes live.
