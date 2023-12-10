@@ -435,6 +435,7 @@ const SignUp = () => {
   } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
+    console.log("form data", formData);
     const createData = await createUser({
       name: `${formData.firstName} ${formData.lastName}`,
       email: formData.email,
@@ -496,7 +497,7 @@ const SignUp = () => {
             />
           )}
           <div className="w-full max-w-md">
-            {currentPanel === 6 && (
+            {currentPanel === 5 && (
               <div className="flex w-full max-w-md space-x-2">
                 {currentPanel > 0 && (
                   <Button
@@ -513,7 +514,7 @@ const SignUp = () => {
             )}
           </div>
         </form>
-        {currentPanel < 6 && (
+        {currentPanel < 5 && (
           <div className="flex w-full max-w-md space-x-2">
             {currentPanel > 0 && (
               <Button
