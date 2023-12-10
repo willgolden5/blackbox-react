@@ -16,10 +16,14 @@ export default function Newsletter() {
   };
 
   return (
-    <div className="flex flex-col space-y-8">
-      <h1 className="text-center text-2xl font-bold">
-        Sign up to be notified when registration goes live.
+    <div className="flex flex-col space-y-6 text-center">
+      <h1 className=" z-2 relative text-4xl font-bold">
+        Blackbox{" "}
+        <span className="absolute bottom-2 right-56 h-[26%] w-[153px] rounded-sm bg-purple opacity-30"></span>
       </h1>
+      <p className="text-center text-lg font-light text-gray-700">
+        Sign up to be notified when registration goes live.
+      </p>
       <form
         onSubmit={signUpForNewsletter}
         className="flex w-min items-center rounded-md border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
