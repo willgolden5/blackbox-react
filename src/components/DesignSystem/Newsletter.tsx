@@ -26,7 +26,7 @@ export default function Newsletter() {
       </p>
       <form
         onSubmit={signUpForNewsletter}
-        className="flex w-min items-center rounded-md border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+        className="flex w-min items-center rounded-md border-2 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none"
         role="form"
       >
         <input
