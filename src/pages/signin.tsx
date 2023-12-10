@@ -20,12 +20,12 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-8 rounded-md border-2 border-black bg-offWhite p-8 text-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none">
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="w-[calc(100% - 2em)] max-w-md space-y-8 rounded-md border-2 border-black bg-offWhite p-8 text-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none">
         <div>
           <h1 className="relative text-5xl font-bold">
             Blackbox
-            <span className="z-4 absolute bottom-2 left-20 h-[26%] w-[216px] rounded-sm bg-purple opacity-30"></span>
+            <span className="z-4 absolute bottom-2 left-20 hidden h-[26%] w-[216px] rounded-sm bg-purple opacity-30 md:block"></span>
           </h1>
           <p className="text-md mt-2 text-center font-normal text-gray-700">
             Trade with market insiders. From Washington to Silicon Valley.
