@@ -490,17 +490,21 @@ const SignUp = () => {
           is_politically_exposed: formData.isPoliticallyExposed,
           immediate_family_exposed: formData.immediateFamilyExposed,
         },
-        trusted_contact: {
-          given_name: "", // Placeholder, update with actual data
-          family_name: "", // Placeholder, update with actual data
-          email_address: "", // Placeholder, update with actual data
-        },
         agreements: [
           {
+            agreement: "margin_agreement",
+            signed_at: "2020-09-11T18:09:33Z",
+            ip_address: "185.13.21.99",
+          },
+          {
+            agreement: "account_agreement",
+            signed_at: "2020-09-11T18:13:44Z",
+            ip_address: "185.13.21.99",
+          },
+          {
             agreement: "customer_agreement",
-            signed_at: new Date().toISOString(), // Assuming the current date/time
-            ip_address: "192.0.2.1", // Placeholder, update with actual data
-            revision: "string", // Placeholder, update with actual data
+            signed_at: "2020-09-11T18:13:44Z",
+            ip_address: "185.13.21.99",
           },
         ],
         enabled_assets: ["us_equity"], // Assuming default asset

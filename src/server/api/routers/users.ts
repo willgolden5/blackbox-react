@@ -35,24 +35,22 @@ const disclosuresSchema = z.object({
   immediate_family_exposed: z.boolean(),
 });
 
-const trustedContactSchema = z.object({
-  given_name: z.string(),
-  family_name: z.string(),
-  email_address: z.string(),
-});
+// const trustedContactSchema = z.object({
+//   given_name: z.string(),
+//   family_name: z.string(),
+//   email_address: z.string(),
+// });
 
 const agreementsSchema = z.object({
   agreement: z.string(),
   signed_at: z.string(),
   ip_address: z.string(),
-  revision: z.string(),
 });
 
 const alpacaCreateSchema = z.object({
   contact: contactSchema,
   identity: identitySchema,
   disclosures: disclosuresSchema,
-  trusted_contact: trustedContactSchema,
   agreements: z.array(agreementsSchema),
   enabled_assets: z.array(z.string()),
 });
@@ -104,20 +102,14 @@ export const userRouter = createTRPCRouter({
     .input(alpacaCreateSchema)
     .mutation(async ({ input }) => {
       try {
-        const response = await fetch(
-          "https://broker-api.sandbox.alpaca.markets/v1/accounts",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization:
-                "Bearer eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjoiM2EwYzA3MTktZjY0Zi00MGQ5LWE5OTYtMDUxNzkzZTdhODkwIiwidXNlcl9pZCI6IjI1MDY5MmIxLTM3ZjMtNGEzMS1iZTAwLTk5MjcyYTg1ZjYxNiIsIm93bmVyX2lkIjoiIiwiZW1haWwiOiJ3dGdvbGRlbjVAZ21haWwuY29tIiwiY29ycmVzcG9uZGVudCI6IjE3ckoiLCJpc3MiOiJhbHBhY2EubWFya2V0cyIsImV4cCI6MTcwMjIzNjcwMSwibmJmIjoxNzAyMjM1NTAxLCJpYXQiOjE3MDIyMzU1MDF9.AePMRsWsp5qKJ5oncyR1oNbvczIslmBdkLicgj_jyQzGKk9JgqT4OFYJ3YEqiUgKUhuwV4hWqxKWRf78hxUL_pq-APj4ktHJv0hXGYs-mlB51XVRh0O-i6QFqLF18GVhnY4ukb2xAM40iE5OMrv8_MBXuRmfdH17vicJZhFbHDvO5mup",
-            },
-            body: JSON.stringify(input),
+        const response = await fetch("http://localhost:3001/create-account", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify(input),
+        });
 
-        console.log("response", response);
         if (!response.ok) {
           throw new Error("Failed to create account with Alpaca");
         }
