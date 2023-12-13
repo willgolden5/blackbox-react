@@ -101,7 +101,7 @@ export const userRouter = createTRPCRouter({
   alpacaCreate: publicProcedure
     .input(
       z.object({
-        createAccountDTO: alpacaCreateSchema,
+        createAccountDto: alpacaCreateSchema,
         password: z.string().min(6),
       }),
     )
