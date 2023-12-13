@@ -99,7 +99,12 @@ export const userRouter = createTRPCRouter({
       });
     }),
   alpacaCreate: publicProcedure
-    .input(z.object({ alpacaCreateSchema, password: z.string().min(6) }))
+    .input(
+      z.object({
+        createAccountDTO: alpacaCreateSchema,
+        password: z.string().min(6),
+      }),
+    )
     .mutation(async ({ input }) => {
       try {
         const response = await fetch("http://localhost:3001/create-account", {
