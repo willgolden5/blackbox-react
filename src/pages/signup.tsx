@@ -449,7 +449,6 @@ const SignUp = () => {
   const [userExists, setUserExists] = useState(false);
   const router = useRouter();
   const { mutateAsync: createUser } = api.user.create.useMutation();
-  const { mutateAsync: alpacaCreate } = api.user.alpacaCreate.useMutation();
 
   const {
     register,
@@ -463,67 +462,66 @@ const SignUp = () => {
     const ipAddressData = await ipAddressResponse.json();
     const ipAddress = ipAddressData.ip;
     const currentDate = new Date().toISOString();
-    // const createData = await createUser({
-    //   name: `${formData.firstName} ${formData.lastName}`,
-    //   email: formData.email,
-    //   password: formData.password,
-    //   phone: formData.phoneNumber,
-    // });
-    // if (createData === "user already exists") {
-    //   setUserExists(true);
-    // } else {
-    const alpacaData = {
-      alpacaCreateSchema: {
-        contact: {
-          email_address: formData.email,
-          phone_number: formData.phoneNumber,
-          street_address: formData.streetAddress,
-          unit: formData.streetAddress[1] || "",
-          city: formData.city,
-          state: formData.state,
-          postal_code: formData.postalCode,
-        },
-        identity: {
-          tax_id_type: formData.taxIdType,
-          given_name: formData.firstName,
-          family_name: formData.lastName,
-          date_of_birth: formData.dateOfBirth,
-          tax_id: formData.taxId,
-          country_of_citizenship: formData.countryOfTaxResidence, // Assuming citizenship is the same as tax residence
-          country_of_birth: formData.countryOfTaxResidence, // Assuming birth country is the same as tax residence
-          country_of_tax_residence: formData.countryOfTaxResidence,
-          funding_source: formData.fundingSource,
-        },
-        disclosures: {
-          is_control_person: formData.isControlPerson,
-          is_affiliated_exchange_or_finra: formData.isAffiliatedExchangeOrFinra,
-          is_politically_exposed: formData.isPoliticallyExposed,
-          immediate_family_exposed: formData.immediateFamilyExposed,
-        },
-        agreements: [
-          {
-            agreement: "margin_agreement",
-            signed_at: currentDate,
-            ip_address: ipAddress,
-          },
-          {
-            agreement: "account_agreement",
-            signed_at: currentDate,
-            ip_address: ipAddress,
-          },
-          {
-            agreement: "customer_agreement",
-            signed_at: currentDate,
-            ip_address: ipAddress,
-          },
-        ],
-        enabled_assets: ["us_equity"], // Assuming default asset
+
+    const alpacaCreateSchema = {
+      contact: {
+        email_address: formData.email,
+        phone_number: formData.phoneNumber,
+        street_address: formData.streetAddress,
+        unit: formData.streetAddress[1] || "",
+        city: formData.city,
+        state: formData.state,
+        postal_code: formData.postalCode,
       },
+      identity: {
+        tax_id_type: formData.taxIdType,
+        given_name: formData.firstName,
+        family_name: formData.lastName,
+        date_of_birth: formData.dateOfBirth,
+        tax_id: formData.taxId,
+        country_of_citizenship: formData.countryOfTaxResidence, // Assuming citizenship is the same as tax residence
+        country_of_birth: formData.countryOfTaxResidence, // Assuming birth country is the same as tax residence
+        country_of_tax_residence: formData.countryOfTaxResidence,
+        funding_source: formData.fundingSource,
+      },
+      disclosures: {
+        is_control_person: formData.isControlPerson,
+        is_affiliated_exchange_or_finra: formData.isAffiliatedExchangeOrFinra,
+        is_politically_exposed: formData.isPoliticallyExposed,
+        immediate_family_exposed: formData.immediateFamilyExposed,
+      },
+      agreements: [
+        {
+          agreement: "margin_agreement",
+          signed_at: currentDate,
+          ip_address: ipAddress,
+        },
+        {
+          agreement: "account_agreement",
+          signed_at: currentDate,
+          ip_address: ipAddress,
+        },
+        {
+          agreement: "customer_agreement",
+          signed_at: currentDate,
+          ip_address: ipAddress,
+        },
+      ],
+      enabled_assets: ["us_equity"], // Assuming default asset
     };
-    console.log("alpaca data", alpacaData);
-    // await alpacaCreate(alpacaData);
-    // router.push("/signin");
-    // }
+
+    const createResponse = await createUser({
+      internal: {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phoneNumber,
+      },
+      alpaca: alpacaCreateSchema,
+    });
+
+    console.log("alpaca data", createResponse);
+    router.push("/signin");
   };
 
   return (

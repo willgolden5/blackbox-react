@@ -59,22 +59,26 @@ export const userRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        name: z.string(),
-        password: z.string(),
-        email: z.string(),
-        phone: z.string(),
+        alpaca: alpacaCreateSchema,
+        internal: z.object({
+          name: z.string(),
+          password: z.string(),
+          email: z.string(),
+          phone: z.string(),
+        }),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const { alpaca, internal } = input;
       let error = null;
-      const hashPass = bcrypt.hashSync(input.password, 10);
+      const hashPass = bcrypt.hashSync(internal.password, 10);
       await ctx.db.user
         .create({
           data: {
-            name: input.name,
+            name: internal.name,
             password: hashPass,
-            email: input.email,
-            phone: input.phone,
+            email: internal.email,
+            phone: internal.phone,
           },
         })
         .catch((err) => (error = err));
@@ -82,7 +86,40 @@ export const userRouter = createTRPCRouter({
       if (error) {
         return "user already exists";
       } else {
-        return "user created successfully";
+        try {
+          const response = await fetch("http://localhost:3001/create-account", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              createAccountDto: alpaca,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to create account with Alpaca");
+          }
+
+          const alpacaResponse = await response.json();
+          await ctx.db.user.update({
+            where: {
+              email: internal.email,
+            },
+            data: {
+              alpacaId: alpacaResponse.id,
+            },
+          });
+
+          return "Account created successfully";
+        } catch (error) {
+          // Check if the error is an instance of Error
+          if (error instanceof Error) {
+            return error.message;
+          }
+          // If it's not an Error instance, handle it as an unknown error
+          return "An unknown error occurred";
+        }
       }
     }),
   get: publicProcedure
