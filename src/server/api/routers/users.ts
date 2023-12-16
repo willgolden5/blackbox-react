@@ -87,15 +87,18 @@ export const userRouter = createTRPCRouter({
         return "user already exists";
       } else {
         try {
-          const response = await fetch("http://localhost:3001/create-account", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const response = await fetch(
+            `${process.env.API_URL}/create-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                createAccountDto: alpaca,
+              }),
             },
-            body: JSON.stringify({
-              createAccountDto: alpaca,
-            }),
-          });
+          );
 
           if (!response.ok) {
             return "alpaca create error";
@@ -143,7 +146,7 @@ export const userRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       try {
-        const response = await fetch("http://localhost:3001/create-account", {
+        const response = await fetch(`${process.env.API_URL}/create-account`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
