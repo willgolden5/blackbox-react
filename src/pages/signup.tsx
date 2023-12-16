@@ -447,6 +447,7 @@ const PanelFour = ({ register, errors }: PanelProps) => {
 const SignUp = () => {
   const [currentPanel, setCurrentPanel] = useState(0);
   const [userExists, setUserExists] = useState(false);
+  const [alpacaCreateIssue, setAlpacaCreateIssue] = useState<boolean>(false); // Default to SSN
   const router = useRouter();
   const { mutateAsync: createUser } = api.user.create.useMutation();
 
@@ -520,7 +521,15 @@ const SignUp = () => {
       alpaca: alpacaCreateSchema,
     });
 
-    console.log("alpaca data", createResponse);
+    if (createResponse === "user already exists") {
+      setUserExists(true);
+      return;
+    }
+    if (createResponse === "alpaca create error") {
+      setAlpacaCreateIssue(true);
+      return;
+    }
+
     router.push("/signin");
   };
 

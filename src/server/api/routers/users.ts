@@ -98,7 +98,7 @@ export const userRouter = createTRPCRouter({
           });
 
           if (!response.ok) {
-            throw new Error("Failed to create account with Alpaca");
+            return "alpaca create error";
           }
 
           const alpacaResponse = await response.json();
@@ -111,7 +111,7 @@ export const userRouter = createTRPCRouter({
             },
           });
 
-          return "Account created successfully";
+          return "account created successfully";
         } catch (error) {
           // Check if the error is an instance of Error
           if (error instanceof Error) {
