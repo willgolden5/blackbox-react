@@ -16,7 +16,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <button
           aria-haspopup="listbox"
           aria-expanded={isActiveDropdown}
-          onClick={() => setIsActiveDropdown(!isActiveDropdown)}
+          onClick={(e) => {
+            e.preventDefault();
+            setIsActiveDropdown(!isActiveDropdown);
+          }}
           className="flex w-full cursor-pointer items-center justify-between rounded-md border-2 border-black bg-[#bc95d4] px-4 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none"
         >
           <span className="mx-auto">{selectedItem}</span>
