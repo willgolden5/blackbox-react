@@ -20,14 +20,13 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="w-full max-w-md space-y-8 rounded-md border-2 border-black p-8 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="w-[calc(100% - 2em)] max-w-md space-y-8 rounded-md border-2 border-black bg-offWhite p-8 text-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-bold text-black">
-            Blackbox
-          </h2>
-          <p className="text-md mt-2 text-center text-black">
-            Welcome to the Blackbox. Please login to continue.
+          <h1 className="relative text-5xl font-bold">Blackbox</h1>
+          <p className="text-md mt-2 text-center font-normal text-gray-700">
+            Trade with market insiders. From Washington to Wall Street. Please
+            login to continue.
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -55,16 +54,16 @@ const SignIn = () => {
           </div>
 
           <div className="w-full">
-            <Button className="bg-green w-full" type="submit">
+            <Button className="w-full bg-green" type="submit">
               Login
             </Button>
           </div>
         </form>
         <div className="space-y-4mt-6 flex flex-col text-center">
-          <a href="#" className="hover:text-orange text-sm text-gray-700">
+          <a href="#" className="text-sm text-gray-700 hover:text-orange">
             Forgot your password?
           </a>
-          <a href="/signup" className="hover:text-purple text-sm text-gray-700">
+          <a href="/signup" className="text-sm text-gray-700 hover:text-purple">
             Don't have an account? Sign up
           </a>
         </div>

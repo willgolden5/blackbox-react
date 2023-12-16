@@ -5,11 +5,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "~/components/DesignSystem/Button";
 import Input from "~/components/DesignSystem/Input";
 import Select from "~/components/DesignSystem/Select";
+import Newsletter from "~/components/DesignSystem/Newsletter";
 import { api } from "~/utils/api";
-import {
-  getStateAbbreviation,
-  stateAbbreviations,
-} from "~/utils/stateToAbbreviation";
+import { stateAbbreviations } from "~/utils/stateToAbbreviation";
 
 const DisclosuresPanel = dynamic(
   () => import("../components/SignUpPanels/Agreements"),
@@ -532,6 +530,12 @@ const SignUp = () => {
 
     router.push("/signin");
   };
+
+  return (
+    <div className="font-2xl flex min-h-screen items-center justify-center px-4 py-12 text-2xl font-bold sm:px-6 lg:px-8">
+      <Newsletter />
+    </div>
+  );
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center px-4 py-12 sm:px-6 lg:px-8">

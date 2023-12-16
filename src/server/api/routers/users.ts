@@ -138,34 +138,13 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
-  alpacaCreate: publicProcedure
-    .input(
-      z.object({
-        alpacaCreateSchema,
-      }),
-    )
-    .mutation(async ({ input }) => {
-      try {
-        const response = await fetch(`${process.env.API_URL}/create-account`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ createAccountDto: input.alpacaCreateSchema }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to create account with Alpaca");
-        }
-
-        return await response.json();
-      } catch (error) {
-        // Check if the error is an instance of Error
-        if (error instanceof Error) {
-          return error.message;
-        }
-        // If it's not an Error instance, handle it as an unknown error
-        return "An unknown error occurred";
-      }
+  interestSignup: publicProcedure
+    .input(z.object({ email: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.interestList.create({
+        data: {
+          email: input.email,
+        },
+      });
     }),
 });
