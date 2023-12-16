@@ -28,7 +28,10 @@ export default function Accordion({ question, answer, name, control }: Props) {
         aria-expanded={field.value}
         style={{ borderBottom: field.value ? "solid 2px" : "0px" }}
         className="flex w-full items-center justify-between rounded-[5px] border-black bg-[#bc95d4] p-5 font-bold"
-        // onClick={() => field.onChange(!field.value)} // Update form state on click
+        onClick={(e) => {
+          e.preventDefault();
+          field.onChange(!field.value);
+        }} // Update form state on click
       >
         {question}
         <FiPlus
