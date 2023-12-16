@@ -25,6 +25,7 @@ model User {
   isPaid           Boolean            @default(false)
   phone            String?
   alpacaId         String?
+  ACHRelationship  ACHRelationship[]
   ActiveStrategies ActiveStrategies[]
   sessions         Session[]
 }
@@ -104,4 +105,22 @@ model TradeErrors {
   error      String
   createdAt  DateTime @default(now())
   updatedAt  DateTime
+}
+
+model ACHRelationship {
+  id                String   @id
+  userId            String
+  accountId         String
+  createdAt         DateTime
+  updatedAt         DateTime
+  status            String
+  accountOwnerName  String
+  bankAccountType   String
+  bankAccountNumber String
+  bankRoutingNumber String
+  nickname          String
+  processorToken    String?
+  User              User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, accountId])
 }

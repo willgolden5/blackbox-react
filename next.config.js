@@ -17,6 +17,11 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+
+    return config;
+  },
 };
 
 export default config;

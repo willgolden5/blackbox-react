@@ -3,6 +3,7 @@ import TradeForm from "./TradeForm";
 import Card from "./DesignSystem/Card";
 import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
 
 // Assuming you have a type for the strategy data
 type Strategy = {
@@ -17,7 +18,10 @@ const strategies: Strategy[] = [
 ];
 
 const Dashboard: React.FC = () => {
-  const { data: alpData } = api.alpaca.getAccount.useQuery();
+  const { data } = useSession();
+  const { data: alpData } = api.alpaca.getAccount.useQuery({
+    alpacaId: data?.user.alpacaId as string,
+  });
   // Replace with state, context, or props as necessary
   const activeStrategy = strategies[0]; // This would be dynamic in a real app
 
@@ -46,7 +50,7 @@ const Dashboard: React.FC = () => {
                       className="flex w-full flex-col space-y-5"
                       href="https://app.alpaca.markets/brokerage/dashboard/overview"
                     >
-                      <Button className="bg-yellow rounded px-4 py-2">
+                      <Button className="rounded bg-yellow px-4 py-2">
                         Manage Alpaca Account
                       </Button>
                     </a>
@@ -54,11 +58,11 @@ const Dashboard: React.FC = () => {
                       className="flex w-full flex-col space-y-5"
                       href="https://app.alpaca.markets/brokerage/banking?transfer=deposit"
                     >
-                      <Button className="bg-green rounded px-4 py-2">
+                      <Button className="rounded bg-green px-4 py-2">
                         Fund your Account
                       </Button>
                     </a>
-                    <Button className="bg-orange rounded px-4 py-2">
+                    <Button className="rounded bg-orange px-4 py-2">
                       Liquidate All Positions
                     </Button>
                   </div>

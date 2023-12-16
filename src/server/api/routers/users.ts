@@ -6,26 +6,79 @@ import {
 } from "~/server/api/trpc";
 import bcrypt from "bcrypt";
 
+const contactSchema = z.object({
+  email_address: z.string(),
+  phone_number: z.string(),
+  street_address: z.array(z.string()),
+  unit: z.string(),
+  city: z.string(),
+  state: z.string(),
+  postal_code: z.string(),
+});
+
+const identitySchema = z.object({
+  tax_id_type: z.string(),
+  given_name: z.string(),
+  family_name: z.string(),
+  date_of_birth: z.string(),
+  tax_id: z.string(),
+  country_of_citizenship: z.string(),
+  country_of_birth: z.string(),
+  country_of_tax_residence: z.string(),
+  funding_source: z.array(z.string()),
+});
+
+const disclosuresSchema = z.object({
+  is_control_person: z.boolean(),
+  is_affiliated_exchange_or_finra: z.boolean(),
+  is_politically_exposed: z.boolean(),
+  immediate_family_exposed: z.boolean(),
+});
+
+// const trustedContactSchema = z.object({
+//   given_name: z.string(),
+//   family_name: z.string(),
+//   email_address: z.string(),
+// });
+
+const agreementsSchema = z.object({
+  agreement: z.string(),
+  signed_at: z.string(),
+  ip_address: z.string(),
+});
+
+const alpacaCreateSchema = z.object({
+  contact: contactSchema,
+  identity: identitySchema,
+  disclosures: disclosuresSchema,
+  agreements: z.array(agreementsSchema),
+  enabled_assets: z.array(z.string()),
+});
+
 export const userRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        name: z.string(),
-        password: z.string(),
-        email: z.string(),
-        phone: z.string(),
+        alpaca: alpacaCreateSchema,
+        internal: z.object({
+          name: z.string(),
+          password: z.string(),
+          email: z.string(),
+          phone: z.string(),
+        }),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const { alpaca, internal } = input;
       let error = null;
-      const hashPass = bcrypt.hashSync(input.password, 10);
+      const hashPass = bcrypt.hashSync(internal.password, 10);
       await ctx.db.user
         .create({
           data: {
-            name: input.name,
+            name: internal.name,
             password: hashPass,
-            email: input.email,
-            phone: input.phone,
+            email: internal.email,
+            phone: internal.phone,
           },
         })
         .catch((err) => (error = err));
@@ -33,7 +86,43 @@ export const userRouter = createTRPCRouter({
       if (error) {
         return "user already exists";
       } else {
-        return "user created successfully";
+        try {
+          const response = await fetch(
+            `${process.env.API_URL}/create-account`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                createAccountDto: alpaca,
+              }),
+            },
+          );
+
+          if (!response.ok) {
+            return "alpaca create error";
+          }
+
+          const alpacaResponse = await response.json();
+          await ctx.db.user.update({
+            where: {
+              email: internal.email,
+            },
+            data: {
+              alpacaId: alpacaResponse.id,
+            },
+          });
+
+          return "account created successfully";
+        } catch (error) {
+          // Check if the error is an instance of Error
+          if (error instanceof Error) {
+            return error.message;
+          }
+          // If it's not an Error instance, handle it as an unknown error
+          return "An unknown error occurred";
+        }
       }
     }),
   get: publicProcedure

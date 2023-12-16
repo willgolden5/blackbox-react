@@ -9,6 +9,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "~/env";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
+import { User as PrismaUser } from "@prisma/client";
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -19,15 +20,13 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: DefaultSession["user"] & {
       id: string;
-      // ...other properties
-      // role: UserRole;
+      alpacaId: string;
+      name: string;
+      email: string;
+      phone: string;
+      isPaid: boolean;
     };
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -40,13 +39,16 @@ export const authOptions: NextAuthOptions = {
     jwt({ token, user }) {
       /* User table contents is exposed in tokens */
       if (user) {
+        const fullUser = user as PrismaUser;
         token.id = user.id;
+        token.alpacaId = fullUser.alpacaId;
       }
       return token;
     },
     session({ session, token, user }) {
       if (session.user) {
         session.user.id = token.id as string;
+        session.user.alpacaId = token.alpacaId as string;
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;

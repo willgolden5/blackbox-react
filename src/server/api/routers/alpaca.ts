@@ -36,28 +36,34 @@ export const alpacaRouter = createTRPCRouter({
         return "user created successfully";
       }
     }),
-  getAccount: protectedProcedure.query(async () => {
-    return await fetch("https://blackbox-nest.fly.dev/account").then(
-      async (res) => {
+  getAccount: protectedProcedure
+    .input(z.object({ alpacaId: z.string() }))
+    .query(async ({ input }) => {
+      return await fetch(
+        `${process.env.API_URL}/account/${input.alpacaId}`,
+      ).then(async (res) => {
         const data = await res.json();
         return data;
-      },
-    );
-  }),
-  getPositions: protectedProcedure.query(async () => {
-    return await fetch("https://blackbox-nest.fly.dev/positions").then(
-      async (res) => {
+      });
+    }),
+  getPositions: protectedProcedure
+    .input(z.object({ alpacaId: z.string() }))
+    .query(async ({ input }) => {
+      return await fetch(
+        `${process.env.API_URL}/positions/${input.alpacaId}`,
+      ).then(async (res) => {
         const data = await res.json();
         return data;
-      },
-    );
-  }),
-  liquidateAccount: protectedProcedure.query(async () => {
-    return await fetch("https://blackbox-nest.fly.devliquidate").then(
-      async (res) => {
+      });
+    }),
+  liquidateAccount: protectedProcedure
+    .input(z.object({ alpacaId: z.string() }))
+    .query(async ({ input }) => {
+      return await fetch(
+        `${process.env.API_URL}/liquidate/${input.alpacaId}`,
+      ).then(async (res) => {
         const data = await res.json();
         return data;
-      },
-    );
-  }),
+      });
+    }),
 });
