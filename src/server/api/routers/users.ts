@@ -101,8 +101,7 @@ export const userRouter = createTRPCRouter({
   alpacaCreate: publicProcedure
     .input(
       z.object({
-        createAccountDto: alpacaCreateSchema,
-        password: z.string().min(6),
+        alpacaCreateSchema,
       }),
     )
     .mutation(async ({ input }) => {
@@ -112,7 +111,7 @@ export const userRouter = createTRPCRouter({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(input),
+          body: JSON.stringify({ createAccountDto: input.alpacaCreateSchema }),
         });
 
         if (!response.ok) {

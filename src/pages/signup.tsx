@@ -6,6 +6,10 @@ import Button from "~/components/DesignSystem/Button";
 import Input from "~/components/DesignSystem/Input";
 import Select from "~/components/DesignSystem/Select";
 import { api } from "~/utils/api";
+import {
+  getStateAbbreviation,
+  stateAbbreviations,
+} from "~/utils/stateToAbbreviation";
 
 const DisclosuresPanel = dynamic(
   () => import("../components/SignUpPanels/Agreements"),
@@ -217,11 +221,13 @@ const PanelTwo = ({ register, errors }: PanelProps) => {
         >
           State
         </label>
-        <Input
+        <Select
           id="state"
-          type="text"
-          required
           {...register("state", { required: "State is required" })}
+          items={Object.entries(stateAbbreviations).map(([name, value]) => ({
+            name: value,
+            value: name,
+          }))}
         />
         {errors.state && (
           <p className="text-xs italic text-red-500">{errors.state.message}</p>
@@ -453,17 +459,21 @@ const SignUp = () => {
   } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
-    console.log("form data", formData);
-    const createData = await createUser({
-      name: `${formData.firstName} ${formData.lastName}`,
-      email: formData.email,
-      password: formData.password,
-      phone: formData.phoneNumber,
-    });
-    if (createData === "user already exists") {
-      setUserExists(true);
-    } else {
-      const alpacaData = await alpacaCreate({
+    const ipAddressResponse = await fetch("/api/get-ip-address");
+    const ipAddressData = await ipAddressResponse.json();
+    const ipAddress = ipAddressData.ip;
+    const currentDate = new Date().toISOString();
+    // const createData = await createUser({
+    //   name: `${formData.firstName} ${formData.lastName}`,
+    //   email: formData.email,
+    //   password: formData.password,
+    //   phone: formData.phoneNumber,
+    // });
+    // if (createData === "user already exists") {
+    //   setUserExists(true);
+    // } else {
+    const alpacaData = {
+      alpacaCreateSchema: {
         contact: {
           email_address: formData.email,
           phone_number: formData.phoneNumber,
@@ -493,26 +503,27 @@ const SignUp = () => {
         agreements: [
           {
             agreement: "margin_agreement",
-            signed_at: "2020-09-11T18:09:33Z",
-            ip_address: "185.13.21.99",
+            signed_at: currentDate,
+            ip_address: ipAddress,
           },
           {
             agreement: "account_agreement",
-            signed_at: "2020-09-11T18:13:44Z",
-            ip_address: "185.13.21.99",
+            signed_at: currentDate,
+            ip_address: ipAddress,
           },
           {
             agreement: "customer_agreement",
-            signed_at: "2020-09-11T18:13:44Z",
-            ip_address: "185.13.21.99",
+            signed_at: currentDate,
+            ip_address: ipAddress,
           },
         ],
         enabled_assets: ["us_equity"], // Assuming default asset
-      });
-      console.log(alpacaData);
-      router.push("/signin");
-    }
-    console.log(createData);
+      },
+    };
+    console.log("alpaca data", alpacaData);
+    // await alpacaCreate(alpacaData);
+    // router.push("/signin");
+    // }
   };
 
   return (

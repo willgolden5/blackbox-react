@@ -34,7 +34,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             opacity: isActiveDropdown ? "1" : "0",
             visibility: isActiveDropdown ? "visible" : "hidden",
           }}
-          className="absolute left-0 z-30 w-full rounded-md border-2 border-black text-center font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
+          className="s absolute left-0 z-30 max-h-40 w-full overflow-x-auto rounded-md border-2 border-black text-center font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all"
         >
           <select ref={ref} {...rest} className="hidden">
             {items.map((item, index) => (
