@@ -20,10 +20,7 @@ interface TradeFormProps {
   activeStrategy: Strategy;
 }
 
-const TradeForm: React.FC<TradeFormProps> = ({
-  strategies,
-  activeStrategy,
-}) => {
+const TradeForm: React.FC<TradeFormProps> = ({ strategies }) => {
   const {
     register,
     handleSubmit,
@@ -76,7 +73,7 @@ const TradeForm: React.FC<TradeFormProps> = ({
             </div>
             <Button
               type="submit"
-              className="bg-green mt-2 w-full rounded px-4 py-2"
+              className="mt-2 w-full rounded bg-green px-4 py-2"
             >
               TRADE
             </Button>

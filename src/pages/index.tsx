@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Dashboard from "~/components/Dashboard";
+import Newsletter from "~/components/DesignSystem/Newsletter";
 import Navbar from "~/components/Navbar";
 
 export default function Home() {
@@ -30,6 +31,11 @@ export default function Home() {
       </div>
     );
   } else {
-    router.push("/signin");
+    // router.push("signin");
+    return (
+      <div className="font-2xl flex min-h-screen items-center justify-center px-4 py-12 text-2xl font-bold sm:px-6 lg:px-8">
+        <Newsletter />
+      </div>
+    );
   }
 }
