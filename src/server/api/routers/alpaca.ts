@@ -5,6 +5,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import bcrypt from "bcrypt";
+import { useSession } from "next-auth/react";
 
 export const alpacaRouter = createTRPCRouter({
   create: protectedProcedure
@@ -36,26 +37,22 @@ export const alpacaRouter = createTRPCRouter({
         return "user created successfully";
       }
     }),
-  getAccount: protectedProcedure
-    .input(z.object({ alpacaId: z.string() }))
-    .query(async ({ input }) => {
-      return await fetch(
-        `${process.env.API_URL}/account/${input.alpacaId}`,
-      ).then(async (res) => {
-        const data = await res.json();
-        return data;
-      });
-    }),
-  getPositions: protectedProcedure
-    .input(z.object({ alpacaId: z.string() }))
-    .query(async ({ input }) => {
-      return await fetch(
-        `${process.env.API_URL}/positions/${input.alpacaId}`,
-      ).then(async (res) => {
-        const data = await res.json();
-        return data;
-      });
-    }),
+  getAccount: protectedProcedure.query(async ({ ctx }) => {
+    return await fetch(
+      `${process.env.API_URL}/account/?id=${ctx.session.user.alpacaId}`,
+    ).then(async (res) => {
+      const data = await res.json();
+      return data;
+    });
+  }),
+  getPositions: protectedProcedure.query(async ({ ctx }) => {
+    return await fetch(
+      `${process.env.API_URL}/positions/?id=${ctx.session.user.alpacaId}`,
+    ).then(async (res) => {
+      const data = await res.json();
+      return data;
+    });
+  }),
   liquidateAccount: protectedProcedure
     .input(z.object({ alpacaId: z.string() }))
     .query(async ({ input }) => {

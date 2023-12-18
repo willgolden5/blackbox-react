@@ -6,6 +6,36 @@ import {
 } from "~/server/api/trpc";
 import bcrypt from "bcrypt";
 
+// Define the schemas for the request bodies
+const tradeSchema = z.object({
+  alpacaId: z.string(),
+  ticker: z.string(),
+  notional: z.number(),
+  side: z.string(),
+  type: z.string(),
+  time_in_force: z.string(),
+});
+
+const achRelationshipSchema = z.object({
+  accountId: z.string(),
+  achData: z.any(), // Replace with the actual schema
+});
+
+const checkAchRelationshipSchema = z.object({
+  accountId: z.string(),
+});
+
+const achTransferSchema = z.object({
+  accountId: z.string(),
+  transferData: z.any(), // Replace with the actual schema
+});
+
+const initiateAchTransferSchema = z.object({
+  accountId: z.string(),
+  achRelationshipData: z.any(), // Replace with the actual schema
+  amount: z.string(),
+});
+
 const contactSchema = z.object({
   email_address: z.string(),
   phone_number: z.string(),
@@ -137,6 +167,102 @@ export const userRouter = createTRPCRouter({
           email: input.email,
         },
       });
+    }),
+
+  trade: protectedProcedure.input(tradeSchema).mutation(async ({ input }) => {
+    const response = await fetch(`${process.env.API_URL}/trade`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error in trade");
+    }
+
+    return response.json();
+  }),
+  createACHRelationship: publicProcedure
+    .input(achRelationshipSchema)
+    .mutation(async ({ input }) => {
+      const response = await fetch(
+        `${process.env.API_URL}/create-ach-relationship`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(input),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Error in create ACH relationship");
+      }
+
+      return response.json();
+    }),
+
+  checkACHRelationship: publicProcedure
+    .input(checkAchRelationshipSchema)
+    .mutation(async ({ input }) => {
+      const response = await fetch(
+        `${process.env.API_URL}/check-ach-relationship`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(input),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Error in check ACH relationship");
+      }
+
+      return response.json();
+    }),
+
+  createACHTransfer: publicProcedure
+    .input(achTransferSchema)
+    .mutation(async ({ input }) => {
+      const response = await fetch(
+        `${process.env.API_URL}/create-ach-transfer`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(input),
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("Error in create ACH transfer");
+      }
+
+      return response.json();
+    }),
+
+  initiateACHTransfer: publicProcedure
+    .input(initiateAchTransferSchema)
+    .mutation(async ({ input }) => {
+      const response = await fetch(`${process.env.API_URL}/ach-transfer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(input),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error in initiate ACH transfer");
+      }
+
+      return response.json();
     }),
   interestSignup: publicProcedure
     .input(z.object({ email: z.string() }))

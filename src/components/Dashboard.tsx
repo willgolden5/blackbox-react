@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TradeForm from "./TradeForm";
 import Card from "./DesignSystem/Card";
 import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
-import { useSession } from "next-auth/react";
 
 // Assuming you have a type for the strategy data
 type Strategy = {
@@ -18,11 +17,8 @@ const strategies: Strategy[] = [
 ];
 
 const Dashboard: React.FC = () => {
-  const { data } = useSession();
-  const { data: alpData } = api.alpaca.getAccount.useQuery({
-    alpacaId: data?.user.alpacaId as string,
-  });
-  // Replace with state, context, or props as necessary
+  const { data: alpData } = api.alpaca.getAccount.useQuery();
+  const { data: positionData } = api.alpaca.getPositions.useQuery();
   const activeStrategy = strategies[0]; // This would be dynamic in a real app
 
   return (
@@ -39,25 +35,19 @@ const Dashboard: React.FC = () => {
               <>
                 <div className="w-full">
                   <p className="pb-2">
-                    Portfolio Value: ${alpData?.portfolio_value}
+                    Portfolio Value: ${alpData?.last_equity}
                   </p>
-                  <p className="pb-2">Balance: ${alpData?.cash}</p>
+                  <p className="pb-2">Balance: ${}</p>
                   <p className="pb-6">
                     Active Strategy: {activeStrategy?.name}
                   </p>
                   <div className="flex w-full flex-col space-y-5">
-                    <a
-                      className="flex w-full flex-col space-y-5"
-                      href="https://app.alpaca.markets/brokerage/dashboard/overview"
-                    >
+                    <a className="flex w-full flex-col space-y-5" href="">
                       <Button className="rounded bg-yellow px-4 py-2">
                         Manage Alpaca Account
                       </Button>
                     </a>
-                    <a
-                      className="flex w-full flex-col space-y-5"
-                      href="https://app.alpaca.markets/brokerage/banking?transfer=deposit"
-                    >
+                    <a className="flex w-full flex-col space-y-5" href="">
                       <Button className="rounded bg-green px-4 py-2">
                         Fund your Account
                       </Button>
