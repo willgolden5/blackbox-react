@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
                   <div className="flex w-full flex-col space-y-5">
                     <a className="flex w-full flex-col space-y-5" href="">
                       <Button className="rounded bg-yellow px-4 py-2">
-                        Manage Alpaca Account
+                        Manage Account
                       </Button>
                     </a>
                     <a className="flex w-full flex-col space-y-5" href="">

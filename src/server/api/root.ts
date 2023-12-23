@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "./routers/users";
 import { alpacaRouter } from "./routers/alpaca";
+import { strategyRouter } from "./routers/strategies";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { alpacaRouter } from "./routers/alpaca";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   alpaca: alpacaRouter,
+  strategy: strategyRouter,
 });
 
 // export type definition of API

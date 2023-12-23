@@ -52,6 +52,7 @@ model Strategy {
   description String
   createdAt   DateTime @default(now())
   userId      String?
+  active      Boolean  @default(false)
 }
 
 model RebalanceDates {
@@ -71,7 +72,7 @@ model ActiveStrategies {
 }
 
 model CongressBuys {
-  ticker        String   @unique
+  ticker        String   @id @unique
   createdAt     DateTime
   updatedAt     DateTime
   navPercentage Float
