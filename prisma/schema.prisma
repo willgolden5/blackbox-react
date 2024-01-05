@@ -25,6 +25,7 @@ model User {
   isPaid           Boolean            @default(false)
   phone            String?
   alpacaId         String?
+  joinDate         DateTime           @default(now())
   ACHRelationship  ACHRelationship[]
   ActiveStrategies ActiveStrategies[]
   sessions         Session[]
@@ -44,15 +45,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-model Strategy {
-  id          String   @id @default(cuid())
-  name        String
-  description String
-  createdAt   DateTime @default(now())
-  userId      String?
-  active      Boolean  @default(false)
 }
 
 model RebalanceDates {
@@ -76,6 +68,16 @@ model CongressBuys {
   createdAt     DateTime
   updatedAt     DateTime
   navPercentage Float
+}
+
+model StrategyInfo {
+  name             String   @id @unique
+  averageYoYReturn String
+  lastYearReturn   String
+  sharpeRatio      String
+  about            String
+  image            String?
+  updatedAt        DateTime
 }
 
 model InterestList {

@@ -59,22 +59,7 @@ const Form = () => {
             />
           )}
         </div>
-        <div className="flex flex w-full flex-col">
-          <label htmlFor="amount" className="">
-            Amount:
-          </label>
-          <Input
-            id="amount"
-            type="float"
-            placeholder="1200.00"
-            {...register("amount", { required: "Amount is required" })}
-          />
-          {errors.amount && (
-            <p className="mt-2 px-2 text-xs italic text-red-500">
-              {errors.amount.message}
-            </p>
-          )}
-        </div>
+
         <Button
           type="submit"
           className="mt-2 w-full rounded bg-green px-4 py-2"
@@ -87,7 +72,7 @@ const Form = () => {
 };
 
 const TradeForm: React.FC<TradeFormProps> = () => {
-  return <Card heading="Strategy Trader:" body={<Form />} />;
+  return <Card heading="Quick Trade:" body={<Form />} />;
 };
 
 export default TradeForm;

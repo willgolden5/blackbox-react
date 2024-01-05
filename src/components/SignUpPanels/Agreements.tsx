@@ -4,7 +4,7 @@ import { useResizeObserver } from "@wojtekmaj/react-hooks";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { useCallback, useState } from "react";
 import { PanelProps } from "./types";
-import Accordion from "../DesignSystem/Accordion";
+import FormAccordion from "../DesignSystem/FormAccordion";
 import { set } from "zod";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -95,7 +95,7 @@ const AgreementsPanel = ({
       ref={setContainerRef}
     >
       {questionsAndAnswers.map((item, index) => (
-        <Accordion
+        <FormAccordion
           key={index}
           question={item.question}
           answer={item.answer}

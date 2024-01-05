@@ -25,6 +25,7 @@ declare module "next-auth" {
       email: string;
       phone: string;
       isPaid: boolean;
+      joinDate: Date;
     };
   }
 }
@@ -42,6 +43,7 @@ export const authOptions: NextAuthOptions = {
         const fullUser = user as PrismaUser;
         token.id = user.id;
         token.alpacaId = fullUser.alpacaId;
+        token.joinDate = fullUser.joinDate;
       }
       return token;
     },
@@ -49,6 +51,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string;
         session.user.alpacaId = token.alpacaId as string;
+        session.user.joinDate = token.joinDate as Date;
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;

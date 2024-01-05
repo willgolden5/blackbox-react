@@ -3,6 +3,7 @@ import TradeForm from "./TradeForm";
 import Card from "./DesignSystem/Card";
 import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
+import { useSession } from "next-auth/react";
 
 // Assuming you have a type for the strategy data
 type Strategy = {
@@ -17,10 +18,10 @@ const strategies: Strategy[] = [
 ];
 
 const Dashboard: React.FC = () => {
+  const { data: session } = useSession();
   const { data: alpData } = api.alpaca.getAccount.useQuery();
   const { data: positionData } = api.alpaca.getPositions.useQuery();
-  const activeStrategy = strategies[0]; // This would be dynamic in a real app
-
+  const { data: strategyData, refetch } = api.alpaca.getPositions.useQuery(); // TODO: left off with fetching the strategy data with the id from the activeStrategy hook
   return (
     <div className="container mx-auto flex flex-col p-4">
       <h1 className="mb-6 ml-auto mr-auto text-3xl font-bold">Dashboard</h1>
@@ -34,13 +35,19 @@ const Dashboard: React.FC = () => {
             body={
               <>
                 <div className="w-full">
-                  <p className="pb-2">
-                    Portfolio Value: ${alpData?.last_equity}
-                  </p>
-                  <p className="pb-2">Balance: ${}</p>
-                  <p className="pb-6">
-                    Active Strategy: {activeStrategy?.name}
-                  </p>
+                  <div className="flex w-full justify-between align-middle">
+                    <p className="pb-2">
+                      Current Value: ${alpData?.last_equity}
+                    </p>
+                    <p className="pb-2">
+                      Buying Power: ${alpData?.buying_power}
+                    </p>
+                  </div>
+                  <div className="flex w-full justify-between align-middle">
+                    <p className="pb-2">Gains: ${alpData?.last_equity}</p>
+                    <p className="pb-2">Return: ${alpData?.buying_power}</p>
+                  </div>
+
                   <div className="flex w-full flex-col space-y-5">
                     <a className="flex w-full flex-col space-y-5" href="">
                       <Button className="rounded bg-yellow px-4 py-2">
@@ -59,12 +66,6 @@ const Dashboard: React.FC = () => {
                 </div>
               </>
             }
-          />
-        </div>
-        <div className="w-[75%]">
-          <TradeForm
-            strategies={strategies}
-            activeStrategy={activeStrategy as Strategy}
           />
         </div>
       </section>
