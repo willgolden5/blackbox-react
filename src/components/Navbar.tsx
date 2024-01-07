@@ -1,8 +1,16 @@
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useToast } from "~/hooks/useToast";
 
 const Navbar = () => {
+  const { data: session } = useSession();
   const router = useRouter();
+  const toast = useToast();
+  const logout = () => {
+    toast("👋 Goodbye!", `See you next time ${session?.user.name}.`, "info");
+    signOut({ redirect: false });
+    router.push("/signin");
+  };
   return (
     <nav className="fixed left-0 top-0 z-10 mx-auto flex h-20 w-full items-center border-b-4 border-black bg-white px-5 m500:h-16">
       <div className="mx-auto flex w-[1300px] max-w-full items-center justify-between">
@@ -30,7 +38,7 @@ const Navbar = () => {
             Strategies
           </p>
           <p
-            onClick={() => signOut()}
+            onClick={() => logout()}
             className="flex cursor-pointer items-center justify-center text-xl font-bold m500:text-xl"
           >
             Logout

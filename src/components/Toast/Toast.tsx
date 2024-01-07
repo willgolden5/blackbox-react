@@ -33,12 +33,12 @@ const Toast: React.FC<ToastType> = ({ id, type, message, title }) => {
         <p className="font-md font-bold">{title}</p>
         <p className="font-sm py-1 font-light">{message}</p>
       </div>
-      <button
+      {/* <button
         onClick={() => setIsExiting(true)}
         className="absolute right-1 top-1 p-1 text-xs font-extralight"
       >
         X
-      </button>
+      </button> */}
     </div>
   );
 };
