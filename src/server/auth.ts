@@ -30,6 +30,18 @@ declare module "next-auth" {
   }
 }
 
+function compareAsync(param1: string, param2: string) {
+  return new Promise(function (resolve, reject) {
+    bcrypt.compare(param1, param2, function (err, res) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
+    });
+  });
+}
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -89,23 +101,13 @@ export const authOptions: NextAuthOptions = {
             email,
           },
         });
-
         if (!user) {
           console.log("User not found");
           // Return null if user data could not be retrieved
           return null;
         }
-
-        password = bcrypt.hashSync(password, 10);
-
-        const isPasswordValid = await bcrypt.compare(
-          credentials?.password as string,
-          password,
-        );
-
-        if (!isPasswordValid) {
-          console.log("Is password valid? ", isPasswordValid);
-          // Return null if user data could not be retrieved
+        const isPasswordValid = await compareAsync(password, user.password);
+        if (isPasswordValid === false) {
           return null;
         }
         console.log("User found", user);

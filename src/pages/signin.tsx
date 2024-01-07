@@ -1,9 +1,13 @@
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Button from "~/components/DesignSystem/Button";
 import Input from "~/components/DesignSystem/Input";
+import { useToast } from "~/hooks/useToast";
 
 const SignIn = () => {
+  const toast = useToast();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -12,13 +16,25 @@ const SignIn = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const { email, password } = data;
+
     await signIn("credentials", {
       email,
       password,
-      callbackUrl: `/`,
-    })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      redirect: false,
+    }).then((res) => {
+      console.log(res);
+      if (res?.status === 401) {
+        toast("Error", "The login you've provided is invalid.", "error");
+      }
+      if (res?.status === 200) {
+        toast(
+          "Successful Login! 🎉",
+          "It's great to see you again!",
+          "success",
+        );
+        router.push("/");
+      }
+    });
   };
 
   return (
@@ -37,20 +53,42 @@ const SignIn = () => {
                 id="email"
                 type="email"
                 autoComplete="email"
-                required
                 placeholder="Email"
-                {...register("email", { required: "Email is required" })}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
               />
+              {errors.email && (
+                <p className="font-xs w-full p-1 pl-2 text-left font-light text-red-600">
+                  {/* @ts-ignore */}
+                  {errors.email.message}
+                </p>
+              )}
             </div>
             <div className="w-full ">
               <Input
                 id="password"
                 type="password"
                 autoComplete="current-password"
-                required
                 placeholder="Password"
-                {...register("password", { required: "Password is required" })}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters long",
+                  },
+                })}
               />
+              {errors.password && (
+                <p className="font-xs w-full p-1 pl-2 text-left font-light text-red-600">
+                  {/* @ts-ignore */}
+                  {errors.password.message}
+                </p>
+              )}
             </div>
           </div>
 

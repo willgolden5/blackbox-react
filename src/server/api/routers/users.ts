@@ -101,17 +101,21 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { alpaca, internal } = input;
       let error = null;
-      const hashPass = bcrypt.hashSync(internal.password, 10);
-      await ctx.db.user
-        .create({
-          data: {
-            name: internal.name,
-            password: hashPass,
-            email: internal.email,
-            phone: internal.phone,
-          },
-        })
-        .catch((err) => (error = err));
+      bcrypt.genSalt(12, async function (err, salt) {
+        bcrypt.hash(input.internal.password, salt, async function (err, hash) {
+          // Store hash in database here
+          await ctx.db.user
+            .create({
+              data: {
+                name: internal.name,
+                password: hash,
+                email: internal.email,
+                phone: internal.phone,
+              },
+            })
+            .catch((err) => (error = err));
+        });
+      });
 
       if (error) {
         return "user already exists";

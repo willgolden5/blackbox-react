@@ -1,13 +1,7 @@
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { api } from "~/utils/api";
 import { useToast } from "~/hooks/useToast";
-
-// function that uses regex to validate email
-const validateEmail = (email: string) => {
-  const regex = /\S+@\S+\.\S+/;
-  return regex.test(email);
-};
+import { validateEmail } from "~/utils/validateEmail";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
