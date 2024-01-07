@@ -16,7 +16,9 @@ const SignIn = () => {
       email,
       password,
       callbackUrl: `/`,
-    });
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -25,8 +27,7 @@ const SignIn = () => {
         <div>
           <h1 className="relative text-5xl font-bold">Blackbox</h1>
           <p className="text-md mt-2 text-center font-normal text-gray-700">
-            Trade with market insiders. From Washington to Wall Street. Please
-            login to continue.
+            Trade like the wall street pros and state street insiders.
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -54,7 +55,7 @@ const SignIn = () => {
           </div>
 
           <div className="w-full">
-            <Button className="w-full bg-green" type="submit">
+            <Button className="w-full bg-purple" type="submit">
               Login
             </Button>
           </div>
@@ -63,7 +64,7 @@ const SignIn = () => {
           <a href="#" className="text-sm text-gray-700 hover:text-orange">
             Forgot your password?
           </a>
-          <a href="/signup" className="text-sm text-gray-700 hover:text-purple">
+          <a href="/signup" className="text-sm text-gray-700 hover:text-green">
             Don't have an account? Sign up
           </a>
         </div>
