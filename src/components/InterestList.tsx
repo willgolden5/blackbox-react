@@ -17,15 +17,23 @@ export default function Newsletter() {
   const signUpForNewsletter = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!validateEmail(email)) {
-      showToast("Error!", "Please enter a valid email address.", "error");
+      showToast(
+        "Did you forget something? 😛",
+        "Please enter a valid email address.",
+        "error",
+      );
       return;
     }
     signup({ email })
       .then(() =>
-        showToast("Success!", "You've been added to the list.", "success"),
+        showToast("Success! 🎉", "You've been added to the list.", "success"),
       )
       .catch(() =>
-        showToast("Error!", "You are already on the waitlist!", "info"),
+        showToast(
+          "Thanks again! 😊",
+          "You are already on the waitlist.",
+          "info",
+        ),
       );
   };
 
