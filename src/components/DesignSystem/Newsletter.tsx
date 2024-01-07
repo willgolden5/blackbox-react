@@ -1,18 +1,46 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { api } from "~/utils/api";
+import { useToastDispatchContext } from "../Toast/ToastContext";
+import { ToastType } from "../Toast/types";
+
+// function that uses regex to validate email
+const validateEmail = (email: string) => {
+  const regex = /\S+@\S+\.\S+/;
+  return regex.test(email);
+};
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const router = useRouter();
+  const dispatch = useToastDispatchContext();
   const { mutateAsync: signup } = api.user.interestSignup.useMutation();
+
+  const showToast = (title: string, message: string, type: string) => {
+    dispatch({
+      type: "ADD_TOAST",
+      payload: {
+        title,
+        id: new Date().getTime(),
+        type: type as ToastType,
+        message,
+      },
+    });
+  };
 
   const signUpForNewsletter = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const res = await signup({ email });
-    if (res.id) {
-      router.push("/");
+    if (!validateEmail(email)) {
+      showToast("Error!", "Please enter a valid email address.", "error");
+      return;
     }
+    signup({ email })
+      .then(() =>
+        showToast("Success!", "You've been added to the list.", "success"),
+      )
+      .catch(() =>
+        showToast("Error!", "You are already on the waitlist!", "info"),
+      );
   };
 
   return (
@@ -41,7 +69,7 @@ export default function Newsletter() {
           }}
         />
         <button
-          className="rounded-e-[5px] border-l-2 border-black bg-[#bc95d4] p-[10px] px-5"
+          className="rounded-e-[5px] border-l-2 border-black bg-purple p-[10px] px-5"
           type="submit"
           aria-label="Submit Newsletter"
         >

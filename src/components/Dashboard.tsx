@@ -18,10 +18,7 @@ const strategies: Strategy[] = [
 ];
 
 const Dashboard: React.FC = () => {
-  const { data: session } = useSession();
   const { data: alpData } = api.alpaca.getAccount.useQuery();
-  const { data: positionData } = api.alpaca.getPositions.useQuery();
-  const { data: strategyData, refetch } = api.alpaca.getPositions.useQuery(); // TODO: left off with fetching the strategy data with the id from the activeStrategy hook
   return (
     <div className="container mx-auto flex flex-col p-4">
       <h1 className="mb-6 ml-auto mr-auto text-3xl font-bold">Dashboard</h1>

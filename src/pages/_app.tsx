@@ -6,6 +6,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
+import { ToastProvider } from "~/components/Toast/ToastContext";
+import ToastContainer from "~/components/Toast/ToastContainer";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -13,8 +15,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
-      <Analytics />
+      <ToastProvider>
+        <Component {...pageProps} />
+        <Analytics />
+        <ToastContainer />
+      </ToastProvider>
     </SessionProvider>
   );
 };

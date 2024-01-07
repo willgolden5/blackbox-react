@@ -22,7 +22,7 @@ const StrategyCard = ({ data }: CardProps) => {
           <p className="">{stratName}</p>
           <div className="flex items-center space-x-2">
             <p className="text-xs font-light">Yearly return: </p>
-            <p className="text-green">{data.technicalData.yoyAverage}%</p>
+            <p className="text-white">{data.technicalData.yoyAverage}%</p>
           </div>
         </div>
       }

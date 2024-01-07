@@ -10,7 +10,7 @@ export default {
       colors: {
         black: "#020202",
         green: "#62aba1",
-        purple: "#A682FF",
+        purple: "#bc95d4",
         yellow: "#F4E76E",
         orange: "#FCA17D",
         offWhite: "#FFFDF7",
@@ -31,6 +31,8 @@ export default {
         "spin-slow": "spin 3s linear infinite",
         marquee: "marquee 5s linear infinite",
         marquee2: "marquee2 5s linear infinite",
+        "slide-in-bottom": "slideInBottom 0.5s ease-out",
+        "slide-out-bottom": "slideOutBottom 0.5s ease-in",
       },
       keyframes: {
         marquee: {
@@ -40,6 +42,14 @@ export default {
         marquee2: {
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(0%)" },
+        },
+        slideInBottom: {
+          "0%": { transform: "translateY(100%)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        slideOutBottom: {
+          "0%": { transform: "translateY(0)", opacity: "1" },
+          "100%": { transform: "translateY(100%)", opacity: "0" },
         },
       },
       screens: {
