@@ -3,6 +3,7 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 import { useToastDispatchContext } from "../Toast/ToastContext";
 import { ToastType } from "../Toast/types";
+import { useToast } from "~/hooks/useToast";
 
 // function that uses regex to validate email
 const validateEmail = (email: string) => {
@@ -12,21 +13,8 @@ const validateEmail = (email: string) => {
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
-  const router = useRouter();
-  const dispatch = useToastDispatchContext();
+  const showToast = useToast();
   const { mutateAsync: signup } = api.user.interestSignup.useMutation();
-
-  const showToast = (title: string, message: string, type: string) => {
-    dispatch({
-      type: "ADD_TOAST",
-      payload: {
-        title,
-        id: new Date().getTime(),
-        type: type as ToastType,
-        message,
-      },
-    });
-  };
 
   const signUpForNewsletter = async (e: React.SyntheticEvent) => {
     e.preventDefault();
