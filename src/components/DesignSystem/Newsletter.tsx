@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { api } from "~/utils/api";
-import { useToastDispatchContext } from "../Toast/ToastContext";
-import { ToastType } from "../Toast/types";
 import { useToast } from "~/hooks/useToast";
 
 // function that uses regex to validate email
