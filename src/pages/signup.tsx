@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "~/components/DesignSystem/Button";
 import Input from "~/components/DesignSystem/Input";
 import Select from "~/components/DesignSystem/Select";
-import Newsletter from "~/components/DesignSystem/Newsletter";
+import Newsletter from "~/components/InterestList";
 import { api } from "~/utils/api";
 import { stateAbbreviations } from "~/utils/stateToAbbreviation";
 

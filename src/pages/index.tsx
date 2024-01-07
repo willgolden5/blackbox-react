@@ -1,13 +1,13 @@
 "use client";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import Dashboard from "~/components/Dashboard";
-import Newsletter from "~/components/DesignSystem/Newsletter";
+import Newsletter from "~/components/InterestList";
 import Navbar from "~/components/Navbar";
 
 export default function Home() {
-  const router = useRouter();
+  // const router = useRouter();
   const { status } = useSession();
 
   if (status === "authenticated") {
