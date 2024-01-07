@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import TradeForm from "./TradeForm";
+import React from "react";
 import Card from "./DesignSystem/Card";
 import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
-import { useSession } from "next-auth/react";
 
 // Assuming you have a type for the strategy data
 type Strategy = {
