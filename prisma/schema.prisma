@@ -50,7 +50,7 @@ model VerificationToken {
 model RebalanceDates {
   lastRebalance DateTime
   nextRebalance DateTime
-  strategy      String   @unique
+  strategy      String   @id @unique
 }
 
 model ActiveStrategies {
@@ -76,8 +76,9 @@ model StrategyInfo {
   lastYearReturn   String
   sharpeRatio      String
   about            String
-  image            String?
+  category         String?
   updatedAt        DateTime
+  image            String?
 }
 
 model InterestList {

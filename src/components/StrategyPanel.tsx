@@ -1,15 +1,12 @@
-import Image from "next/image";
-import Accordion from "~/components/DesignSystem/Accordion";
-import Button from "~/components/DesignSystem/Button";
-import Card from "~/components/DesignSystem/Card";
 import { StrategyCardInfo } from "~/server/api/routers/strategies";
-import { api } from "~/utils/api";
+import Accordion from "./DesignSystem/Accordion";
+import Button from "./DesignSystem/Button";
 
-type CardProps = {
+type PanelProps = {
   data: StrategyCardInfo;
 };
 
-const StrategyCard = ({ data }: CardProps) => {
+const StrategyPanel = ({ data }: PanelProps) => {
   const stratName = data.name
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -70,16 +67,4 @@ const StrategyCard = ({ data }: CardProps) => {
   );
 };
 
-const Strategies = () => {
-  const { data: strategyInfo } = api.strategy.getStrategyCardInfo.useQuery();
-  return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center">
-      <h1 className="text-xl font-semibold">Select a Strategy</h1>
-      <div className="w-full max-w-[600px] space-y-4">
-        {strategyInfo?.map((strategy) => <StrategyCard data={strategy} />)}
-      </div>
-    </div>
-  );
-};
-
-export default Strategies;
+export default StrategyPanel;

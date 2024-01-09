@@ -6,6 +6,7 @@ export type StrategyCardInfo = {
   name: string;
   description: string;
   image: string;
+  category: string;
   technicalData: {
     yoyAverage: string;
     lastYear: string;
@@ -15,6 +16,24 @@ export type StrategyCardInfo = {
     ticker: string;
     weight: number;
   }[];
+};
+
+type Holding = {
+  ticker: string;
+  weight: number;
+};
+
+export type StrategyData = {
+  name: string;
+  description: string;
+  image: string;
+  category: string;
+  technicalData: {
+    yoyAverage: string;
+    lastYear: string;
+    sharpeRatio: string;
+  };
+  holdings: Holding[];
 };
 export const strategyRouter = createTRPCRouter({
   getStrategyCardInfo: protectedProcedure.query(
@@ -36,13 +55,13 @@ export const strategyRouter = createTRPCRouter({
         };
       });
 
-      console.log("congressBuyWeights", congressBuy);
       strats.forEach((strat) => {
         if (strat.name === "congress_buys") {
           formattedStrats.push({
             name: strat.name,
             description: strat.about,
             image: strat.image as string,
+            category: strat.category as string,
             technicalData: {
               yoyAverage: strat.averageYoYReturn,
               lastYear: strat.lastYearReturn,
@@ -56,6 +75,7 @@ export const strategyRouter = createTRPCRouter({
             name: strat.name,
             description: strat.about,
             image: strat.image as string,
+            category: strat.category as string,
             technicalData: {
               yoyAverage: strat.averageYoYReturn,
               lastYear: strat.lastYearReturn,
@@ -70,11 +90,37 @@ export const strategyRouter = createTRPCRouter({
   ),
   getInfoByName: protectedProcedure
     .input(z.object({ name: z.string() }))
-    .query(async ({ ctx, input }): Promise<StrategyInfo | null> => {
-      const strat = await ctx.db.strategyInfo.findUnique({
+    .query(async ({ ctx, input }) => {
+      const congressBuy = await ctx.db.congressBuys.findMany();
+      const congressBuyWeights = congressBuy.map((weight) => {
+        return {
+          ticker: weight.ticker,
+          weight: weight.navPercentage,
+        };
+      });
+      const nancyPelosi = await ctx.db.nancyPelosi.findMany();
+      const nancyWeights = nancyPelosi.map((weight) => {
+        return {
+          ticker: weight.ticker,
+          weight: weight.navPercentage,
+        };
+      });
+      const strat: StrategyInfo | null = await ctx.db.strategyInfo.findUnique({
         where: { name: input.name },
       });
-      return strat;
+      return {
+        name: strat?.name as string,
+        description: strat?.about as string,
+        image: strat?.image as string,
+        category: strat?.category as string,
+        technicalData: {
+          yoyAverage: strat?.averageYoYReturn as string,
+          lastYear: strat?.lastYearReturn as string,
+          sharpeRatio: strat?.sharpeRatio as string,
+        },
+        holdings:
+          strat?.name === "congress_buys" ? congressBuyWeights : nancyWeights,
+      } as StrategyData;
     }),
   getCongressBuysHoldings: protectedProcedure.query(async ({ ctx }) => {
     const holdings = await ctx.db.congressBuys.findMany();
