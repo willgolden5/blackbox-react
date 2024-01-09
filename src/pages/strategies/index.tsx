@@ -1,8 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 const Strategies = () => {
+  const router = useRouter();
   const { data: strategyInfo } = api.strategy.getStrategyCardInfo.useQuery();
   console.log(strategyInfo);
 
@@ -16,7 +18,10 @@ const Strategies = () => {
         <div className="cursor-pointer space-y-4 divide-y-2">
           {strategyInfo?.map((strat) => {
             return (
-              <div className="flex w-full items-center justify-between space-x-4 px-2 py-4">
+              <div
+                onClick={() => router.push(`/strategies/${strat.name}`)}
+                className="flex w-full items-center justify-between space-x-4 px-2 py-4"
+              >
                 <div className="flex w-full items-center space-x-4 px-4">
                   <img
                     className="w-[70px]"
