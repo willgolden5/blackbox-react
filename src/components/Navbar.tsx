@@ -31,18 +31,22 @@ const Navbar = () => {
           BLACKBOX
         </a>
         <div className="flex space-x-8 px-8">
-          <p
-            onClick={() => router.push("/strategies")}
-            className="flex cursor-pointer items-center justify-center text-xl font-bold m500:text-xl"
-          >
-            Strategies
-          </p>
-          <p
-            onClick={() => logout()}
-            className="flex cursor-pointer items-center justify-center text-xl font-bold m500:text-xl"
-          >
-            Logout
-          </p>
+          {session?.user && (
+            <>
+              <p
+                onClick={() => router.push("/strategies")}
+                className="flex cursor-pointer items-center justify-center text-xl font-bold m500:text-xl"
+              >
+                Strategies
+              </p>
+              <p
+                onClick={() => logout()}
+                className="flex cursor-pointer items-center justify-center text-xl font-bold m500:text-xl"
+              >
+                Logout
+              </p>
+            </>
+          )}
         </div>
       </div>
     </nav>
