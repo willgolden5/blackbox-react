@@ -43,7 +43,7 @@ const SignIn = () => {
         <div>
           <h1 className="relative text-5xl font-bold">Blackbox</h1>
           <p className="text-md mt-2 text-center font-normal text-gray-700">
-            Trade like the wall street pros and state street insiders.
+            Trade like the insiders.
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
