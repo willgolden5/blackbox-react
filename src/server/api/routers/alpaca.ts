@@ -47,7 +47,20 @@ export const alpacaRouter = createTRPCRouter({
   }),
   getPositions: protectedProcedure.query(async ({ ctx }) => {
     return await fetch(
-      `${process.env.API_URL}/positions/?id=${ctx.session.user.alpacaId}`,
+      `https://broker-api.sandbox.alpaca.markets/v1/trading/accounts/${ctx.session.user.alpacaId}/account/portfolio/history`,
+    ).then(async (res) => {
+      const data = await res.json();
+      return data;
+    });
+  }),
+  getPortfolioHistory: protectedProcedure.query(async ({ ctx }) => {
+    return await fetch(
+      `https://broker-api.sandbox.alpaca.markets/v1/trading/accounts/${ctx.session.user.alpacaId}/account/portfolio/history`,
+      {
+        headers: {
+          Authorization: `Basic ${process.env.ALPACA_BROKER_AUTH}`,
+        },
+      },
     ).then(async (res) => {
       const data = await res.json();
       return data;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
@@ -18,8 +18,29 @@ const initialData = [
 ];
 
 const Dashboard: React.FC = () => {
+  const [chartData, setChartData] = useState([]);
+  const [gains, setGains] = useState(0);
   const { data: session } = useSession();
   const { data: alpData } = api.alpaca.getAccount.useQuery();
+  const { data: portfolioData } = api.alpaca.getPortfolioHistory.useQuery();
+
+  useEffect(() => {
+    const data =
+      (portfolioData &&
+        portfolioData.timestamp?.map((ts, index) => ({
+          time: new Date(ts * 1000).toISOString().split("T")[0], // Converts timestamp to YYYY-MM-DD format
+          value: portfolioData.equity ? portfolioData.equity[index] : null, // Matches equity value by index
+        }))) ??
+      [];
+
+    setChartData(data);
+
+    const gains =
+      portfolioData?.equity[portfolioData.equity.length - 1] -
+      portfolioData?.equity[0];
+    setGains(gains);
+    console.log(alpData);
+  }, [portfolioData]);
 
   return (
     <div className="container mx-auto flex flex-col p-4">
@@ -32,7 +53,7 @@ const Dashboard: React.FC = () => {
         className="flex w-full flex-col items-center justify-center md:flex-row md:items-stretch"
       >
         <div className="mr-4 w-[100%] pb-8">
-          <ChartComponent data={initialData} />
+          <ChartComponent data={chartData} />
           <>
             <div className="w-full">
               <div className="flex w-full justify-between align-middle">
@@ -40,7 +61,7 @@ const Dashboard: React.FC = () => {
                 <p className="pb-2">Buying Power: ${alpData?.buying_power}</p>
               </div>
               <div className="flex w-full justify-between align-middle">
-                <p className="pb-2">Gains: ${alpData?.last_equity}</p>
+                <p className="pb-2">Gains: ${gains}</p>
                 <p className="pb-2">Return: ${alpData?.buying_power}</p>
               </div>
 
