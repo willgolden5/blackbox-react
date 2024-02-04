@@ -1,9 +1,21 @@
-import React, { use } from "react";
-import Card from "./DesignSystem/Card";
+import React from "react";
 import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
-import StrategyPanel from "./StrategyPanel";
 import { useSession } from "next-auth/react";
+import ChartComponent from "./charts/LineChart";
+
+const initialData = [
+  { time: "2018-12-22", value: 32.51 },
+  { time: "2018-12-23", value: 31.11 },
+  { time: "2018-12-24", value: 27.02 },
+  { time: "2018-12-25", value: 27.32 },
+  { time: "2018-12-26", value: 25.17 },
+  { time: "2018-12-27", value: 28.89 },
+  { time: "2018-12-28", value: 25.46 },
+  { time: "2018-12-29", value: 23.92 },
+  { time: "2018-12-30", value: 22.68 },
+  { time: "2018-12-31", value: 22.67 },
+];
 
 const Dashboard: React.FC = () => {
   const { data: session } = useSession();
@@ -20,6 +32,7 @@ const Dashboard: React.FC = () => {
         className="flex w-full flex-col items-center justify-center md:flex-row md:items-stretch"
       >
         <div className="mr-4 w-[100%] pb-8">
+          <ChartComponent data={initialData} />
           <>
             <div className="w-full">
               <div className="flex w-full justify-between align-middle">
