@@ -38,10 +38,10 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <div className="w-[calc(100% - 2em)] max-w-md space-y-8 rounded-md border-2 border-black p-8 text-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none md:w-[600px]">
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="w-[95%] max-w-md space-y-8 rounded-md border-2 border-black p-8 text-center font-bold shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none md:w-[600px]">
         <div>
-          <img src="/logo.png" className="ml-auto mr-auto w-[75%]" />
+          <img src="/logo.png" className="ml-auto mr-auto w-[60%] md:w-[75%]" />
           {/* <p className="text-md mt-2 text-center font-normal text-gray-700">
             Trade like the insiders.
           </p> */}
