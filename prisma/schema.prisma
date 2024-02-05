@@ -55,7 +55,7 @@ model RebalanceDates {
 
 model ActiveStrategies {
   id          String   @default(cuid())
-  userId      String
+  userId      String   @unique
   strategyId  String
   amount      Float
   activatedAt DateTime @default(now())

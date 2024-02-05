@@ -4,9 +4,15 @@ import { api } from "~/utils/api";
 
 export default function StrategyProfile() {
   const { asPath } = useRouter();
+  const { mutateAsync: setStrategy } = api.user.setActiveStrategy.useMutation();
   const { data } = api.strategy.getInfoByName.useQuery({
     name: asPath.split("/")[2] as string,
   });
+
+  const setActiveStrategy = () => {
+    setStrategy({ strategy: data?.name as string });
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
       <div className="max-w-[600px]">
@@ -44,7 +50,9 @@ export default function StrategyProfile() {
           </div>
         </div>
         <div className="w-full pt-8">
-          <Button className="w-full bg-green">Trade</Button>
+          <Button onClick={setActiveStrategy} className="w-full bg-green">
+            Trade
+          </Button>
         </div>
       </div>
     </div>

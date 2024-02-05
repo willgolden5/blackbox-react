@@ -277,24 +277,29 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
-  // setActiveStrategy: protectedProcedure
-  //   .input(z.object({ strategy: z.string() }))
-  //   .mutation(async ({ ctx, input }) => {
-  //     //TODO: Add logic to set the active strategy on nest project
-  //     await ctx.db.activeStrategies.upsert({
-  //       where: {
-  //         userId: ctx.session.user.id,
-  //       },
-  //       update: {
-  //         strategyId: input.strategy,
-  //       },
-  //       create: {
-  //         userId: ctx.session.user.id,
-  //         amount: 0,
-  //         strategyId: input.strategy,
-  //       },
-  //     });
-  //     })
+  setActiveStrategy: protectedProcedure
+    .input(z.object({ strategy: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const data = await fetch(
+        `${process.env.API_URL}/account/?id=${ctx.session.user.alpacaId}`,
+      ).then(async (res) => {
+        const data = await res.json();
+        return data;
+      });
 
-  //   }),
+      return await ctx.db.activeStrategies.upsert({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        update: {
+          strategyId: input.strategy,
+          amount: parseFloat(data.last_equity),
+        },
+        create: {
+          userId: ctx.session.user.id,
+          amount: parseFloat(data.last_equity),
+          strategyId: input.strategy,
+        },
+      });
+    }),
 });
