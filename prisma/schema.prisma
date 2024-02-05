@@ -54,13 +54,15 @@ model RebalanceDates {
 }
 
 model ActiveStrategies {
-  id          String   @id @default(cuid())
+  id          String   @default(cuid())
   userId      String
   strategyId  String
   amount      Float
   activatedAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([id, userId])
 }
 
 model CongressBuys {
@@ -76,9 +78,9 @@ model StrategyInfo {
   lastYearReturn   String
   sharpeRatio      String
   about            String
-  category         String?
   updatedAt        DateTime
   image            String?
+  category         String?
 }
 
 model InterestList {

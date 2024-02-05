@@ -277,4 +277,24 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+  // setActiveStrategy: protectedProcedure
+  //   .input(z.object({ strategy: z.string() }))
+  //   .mutation(async ({ ctx, input }) => {
+  //     //TODO: Add logic to set the active strategy on nest project
+  //     await ctx.db.activeStrategies.upsert({
+  //       where: {
+  //         userId: ctx.session.user.id,
+  //       },
+  //       update: {
+  //         strategyId: input.strategy,
+  //       },
+  //       create: {
+  //         userId: ctx.session.user.id,
+  //         amount: 0,
+  //         strategyId: input.strategy,
+  //       },
+  //     });
+  //     })
+
+  //   }),
 });
