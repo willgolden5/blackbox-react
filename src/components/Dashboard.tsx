@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const data =
       (portfolioData &&
-        portfolioData.timestamp?.map((ts, index) => ({
+        portfolioData.timestamp?.map((ts: number, index: number) => ({
           time: new Date(ts * 1000).toISOString().split("T")[0], // Converts timestamp to YYYY-MM-DD format
           value: portfolioData.equity ? portfolioData.equity[index] : null, // Matches equity value by index
         }))) ??
