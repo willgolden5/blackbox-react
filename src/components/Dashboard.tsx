@@ -81,18 +81,14 @@ const Dashboard: React.FC = () => {
                 {/* <p className="pb-2">Return: ${alpData?.buying_power}</p> */}
               </div>
 
-              <div className="flex w-full flex-col space-y-5">
-                <a className="flex w-full flex-col space-y-5" href="">
-                  <Button className="rounded bg-yellow px-4 py-2">
-                    Manage Account
-                  </Button>
-                </a>
-                <a className="flex w-full flex-col space-y-5" href="">
-                  <Button className="rounded bg-green px-4 py-2">
-                    Fund your Account
-                  </Button>
-                </a>
-                <Button className="rounded bg-orange px-4 py-2">
+              <div className="flex w-full flex-row space-x-5">
+                <Button className="w-full rounded bg-yellow px-4 py-2 ">
+                  Manage Account
+                </Button>
+                <Button className="w-full rounded bg-green px-4 py-2">
+                  Fund your Account
+                </Button>
+                <Button className="w-full rounded bg-orange px-4 py-2">
                   Liquidate All Positions
                 </Button>
               </div>
