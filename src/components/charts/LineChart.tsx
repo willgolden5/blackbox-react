@@ -16,10 +16,10 @@ const ChartComponent: React.FC<ChartProps> = ({
   data,
   colors = {
     backgroundColor: "white",
-    lineColor: "#2962FF",
+    lineColor: "#bc95d4",
     textColor: "black",
-    areaTopColor: "#2962FF",
-    areaBottomColor: "rgba(41, 98, 255, 0.28)",
+    areaTopColor: "#bc95d4",
+    areaBottomColor: "rgba(244, 231, 110, 0.28)",
   },
 }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
@@ -40,7 +40,9 @@ const ChartComponent: React.FC<ChartProps> = ({
         bottomColor: colors.areaBottomColor,
         lineColor: colors.lineColor,
       });
-      // series.setData(data);
+      series.setData(data);
+
+      console.log(data);
 
       // Define handleResize inside useEffect before its usage
       const handleResize = () => {

@@ -13,13 +13,40 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (!portfolioData) return;
-    const data =
-      (portfolioData &&
-        portfolioData.timestamp?.map((ts: number, index: number) => ({
-          time: new Date(ts * 1000).toISOString().split("T")[0], // Converts timestamp to YYYY-MM-DD format
-          value: portfolioData.equity ? portfolioData.equity[index] : null, // Matches equity value by index
-        }))) ??
-      [];
+    const data = portfolioData.timestamp
+      ? portfolioData.timestamp
+          .reduce(
+            (
+              acc: { time: string | undefined; value: any; count: number }[],
+              ts: number,
+              index: string | number,
+            ) => {
+              // Convert timestamp to YYYY-MM-DD format
+              const time = new Date(ts * 1000).toISOString().split("T")[0];
+              const value = portfolioData.equity
+                ? portfolioData.equity[index]
+                : null;
+
+              // Check if this time already exists in the accumulator
+              const existing = acc.find(
+                (item: { time: string | undefined }) => item.time === time,
+              );
+              if (existing) {
+                // If it exists, update the value with the new value
+                existing.value = value;
+              } else {
+                // If it doesn't exist, add it to the accumulator
+                acc.push({ time, value, count: 1 });
+              }
+              return acc;
+            },
+            [],
+          )
+          .map(({ time, value }: { time: string | undefined; value: any }) => ({
+            time,
+            value,
+          })) // Remove count from the final data
+      : [];
 
     setChartData(data);
 
