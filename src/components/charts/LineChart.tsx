@@ -42,8 +42,6 @@ const ChartComponent: React.FC<ChartProps> = ({
       });
       series.setData(data);
 
-      console.log(data);
-
       // Define handleResize inside useEffect before its usage
       const handleResize = () => {
         chart.applyOptions({ width: chartContainerRef.current?.clientWidth });

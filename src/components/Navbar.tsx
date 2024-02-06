@@ -27,7 +27,10 @@ const Navbar = () => {
             <path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path>
           </svg>
         </button> */}
-        <div className="flex items-center space-x-1 align-middle md:space-x-2">
+        <div
+          onClick={() => router.push("/")}
+          className="flex cursor-pointer items-center space-x-1 align-middle md:space-x-2"
+        >
           <img className="h-[30px] md:h-[50px]" src="/cubeLogo.png" />
           <img className="h-[20px] md:h-[30px]" src="/navLogo.png" />
         </div>

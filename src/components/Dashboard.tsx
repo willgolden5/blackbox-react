@@ -3,16 +3,34 @@ import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import ChartComponent from "./charts/LineChart";
+import { set } from "zod";
+
+type AccountData = {
+  value: string;
+  gains: string;
+};
 
 const Dashboard: React.FC = () => {
   const [chartData, setChartData] = useState([]);
-  const [gains, setGains] = useState(0);
+  const [accountData, setAccountData] = useState({} as AccountData);
   const { data: session } = useSession();
   const { data: alpData } = api.alpaca.getAccount.useQuery();
   const { data: portfolioData } = api.alpaca.getPortfolioHistory.useQuery();
 
   useEffect(() => {
     if (!portfolioData) return;
+    const gains =
+      parseFloat(portfolioData.equity[portfolioData.equity.length - 1]) -
+      parseFloat(portfolioData.equity[0]);
+    setAccountData({
+      value: parseFloat(
+        portfolioData.equity[portfolioData.equity.length - 1],
+      ).toFixed(2),
+      gains: gains.toFixed(2),
+    });
+
+    console.log(portfolioData);
+
     const data = portfolioData.timestamp
       ? portfolioData.timestamp
           .reduce(
@@ -49,13 +67,6 @@ const Dashboard: React.FC = () => {
       : [];
 
     setChartData(data);
-
-    let gains = 0;
-    if (!portfolioData?.equity && portfolioData?.equity?.length) {
-      portfolioData?.equity[portfolioData.equity?.length - 1] -
-        portfolioData?.equity[0];
-    }
-    setGains(gains);
   }, [portfolioData]);
 
   return (
@@ -73,8 +84,8 @@ const Dashboard: React.FC = () => {
           <>
             <div className="w-full">
               <div className="ot ot flex w-full justify-between py-4 align-middle">
-                <p className="pb-2">Current Value: ${alpData?.last_equity}</p>
-                <p className="pb-2">Gains: ${gains}</p>
+                <p className="pb-2">Current Value: ${accountData.value}</p>
+                <p className="pb-2">Gains: ($) {accountData.gains}</p>
                 {/* <p className="pb-2">Buying Power: ${alpData?.buying_power}</p> */}
               </div>
               <div className="flex w-full justify-between align-middle">
