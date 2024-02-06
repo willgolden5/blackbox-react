@@ -40,7 +40,7 @@ const ChartComponent: React.FC<ChartProps> = ({
         bottomColor: colors.areaBottomColor,
         lineColor: colors.lineColor,
       });
-      series.setData(data);
+      // series.setData(data);
 
       // Define handleResize inside useEffect before its usage
       const handleResize = () => {

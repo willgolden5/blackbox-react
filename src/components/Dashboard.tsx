@@ -12,6 +12,7 @@ const Dashboard: React.FC = () => {
   const { data: portfolioData } = api.alpaca.getPortfolioHistory.useQuery();
 
   useEffect(() => {
+    if (!portfolioData) return;
     const data =
       (portfolioData &&
         portfolioData.timestamp?.map((ts: number, index: number) => ({
@@ -22,9 +23,11 @@ const Dashboard: React.FC = () => {
 
     setChartData(data);
 
-    const gains =
-      portfolioData?.equity[portfolioData.equity.length - 1] -
-      portfolioData?.equity[0];
+    let gains = 0;
+    if (!portfolioData?.equity && portfolioData?.equity?.length) {
+      portfolioData?.equity[portfolioData.equity?.length - 1] -
+        portfolioData?.equity[0];
+    }
     setGains(gains);
   }, [portfolioData]);
 

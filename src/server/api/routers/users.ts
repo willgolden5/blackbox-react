@@ -113,50 +113,38 @@ export const userRouter = createTRPCRouter({
                 phone: internal.phone,
               },
             })
+            .then(async () => {
+              const response = await fetch(
+                `${process.env.ALPACA_BROKER_URL}/v1/accounts`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Basic ${process.env.ALPACA_BROKER_AUTH}`,
+                  },
+                  body: JSON.stringify(alpaca),
+                },
+              );
+              if (!response.ok) {
+                return "alpaca create error";
+              }
+              const alpacaResponse = await response.json();
+              await ctx.db.user.update({
+                where: {
+                  email: internal.email,
+                },
+                data: {
+                  alpacaId: alpacaResponse.id,
+                },
+              });
+
+              return "account created successfully";
+            })
             .catch((err) => (error = err));
         });
       });
-
       if (error) {
         return "user already exists";
-      } else {
-        try {
-          const response = await fetch(
-            `${process.env.API_URL}/create-account`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                createAccountDto: alpaca,
-              }),
-            },
-          );
-
-          if (!response.ok) {
-            return "alpaca create error";
-          }
-
-          const alpacaResponse = await response.json();
-          await ctx.db.user.update({
-            where: {
-              email: internal.email,
-            },
-            data: {
-              alpacaId: alpacaResponse.id,
-            },
-          });
-
-          return "account created successfully";
-        } catch (error) {
-          // Check if the error is an instance of Error
-          if (error instanceof Error) {
-            return error.message;
-          }
-          // If it's not an Error instance, handle it as an unknown error
-          return "An unknown error occurred";
-        }
       }
     }),
   get: publicProcedure
@@ -287,19 +275,28 @@ export const userRouter = createTRPCRouter({
         return data;
       });
 
-      return await ctx.db.activeStrategies.upsert({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        update: {
-          strategyId: input.strategy,
-          amount: parseFloat(data.last_equity),
-        },
-        create: {
-          userId: ctx.session.user.id,
-          amount: parseFloat(data.last_equity),
-          strategyId: input.strategy,
-        },
-      });
+      return await ctx.db.activeStrategies
+        .upsert({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          update: {
+            strategyId: input.strategy,
+            amount: parseFloat(data.last_equity),
+          },
+          create: {
+            userId: ctx.session.user.id,
+            alpacaid: ctx.session.user.alpacaId,
+            amount: parseFloat(data.last_equity),
+            strategyId: input.strategy,
+          },
+        })
+        .then(async () => {
+          const response = await fetch(
+            `${process.env.API_URL}/rebalance?alpacaId=${ctx.session.user.alpacaId}`,
+          );
+          console.log(response);
+          return "ok";
+        });
     }),
 });
