@@ -16,18 +16,18 @@ model Session {
 }
 
 model User {
-  id               String             @id @default(cuid())
+  id               String            @id @default(cuid())
   name             String?
-  email            String             @unique
+  email            String            @unique
   emailVerified    DateTime?
   image            String?
   password         String
-  isPaid           Boolean            @default(false)
+  isPaid           Boolean           @default(false)
   phone            String?
   alpacaId         String?
-  joinDate         DateTime           @default(now())
+  joinDate         DateTime          @default(now())
   ACHRelationship  ACHRelationship[]
-  ActiveStrategies ActiveStrategies[]
+  ActiveStrategies ActiveStrategies?
   sessions         Session[]
 }
 
@@ -56,11 +56,11 @@ model RebalanceDates {
 model ActiveStrategies {
   id          String   @default(cuid())
   userId      String   @unique
-  alpacaid    String   @unique
   strategyId  String
   amount      Float
   activatedAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  alpacaid    String   @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([id, userId])
