@@ -3,6 +3,7 @@ import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import ChartComponent from "./charts/LineChart";
+import AlpacaAuthButton from "./AlpacaAuthButton";
 
 type AccountData = {
   value: string;
@@ -16,57 +17,57 @@ const Dashboard: React.FC = () => {
   const { data: alpData } = api.alpaca.getAccount.useQuery();
   const { data: portfolioData } = api.alpaca.getPortfolioHistory.useQuery();
 
-  useEffect(() => {
-    if (!portfolioData) return;
-    const gains =
-      parseFloat(portfolioData.equity[portfolioData.equity.length - 1]) -
-      parseFloat(portfolioData.equity[0]);
-    setAccountData({
-      value: parseFloat(
-        portfolioData.equity[portfolioData.equity.length - 1],
-      ).toFixed(2),
-      gains: gains.toFixed(2),
-    });
+  // useEffect(() => {
+  //   if (!portfolioData) return;
+  //   const gains =
+  //     parseFloat(portfolioData.equity[portfolioData.equity.length - 1]) -
+  //     parseFloat(portfolioData.equity[0]);
+  //   setAccountData({
+  //     value: parseFloat(
+  //       portfolioData.equity[portfolioData.equity.length - 1],
+  //     ).toFixed(2),
+  //     gains: gains.toFixed(2),
+  //   });
 
-    console.log(portfolioData);
+  //   console.log(portfolioData);
 
-    const data = portfolioData.timestamp
-      ? portfolioData.timestamp
-          .reduce(
-            (
-              acc: { time: string | undefined; value: any; count: number }[],
-              ts: number,
-              index: string | number,
-            ) => {
-              // Convert timestamp to YYYY-MM-DD format
-              const time = new Date(ts * 1000).toISOString().split("T")[0];
-              const value = portfolioData.equity
-                ? portfolioData.equity[index]
-                : null;
+  //   const data = portfolioData.timestamp
+  //     ? portfolioData.timestamp
+  //         .reduce(
+  //           (
+  //             acc: { time: string | undefined; value: any; count: number }[],
+  //             ts: number,
+  //             index: string | number,
+  //           ) => {
+  //             // Convert timestamp to YYYY-MM-DD format
+  //             const time = new Date(ts * 1000).toISOString().split("T")[0];
+  //             const value = portfolioData.equity
+  //               ? portfolioData.equity[index]
+  //               : null;
 
-              // Check if this time already exists in the accumulator
-              const existing = acc.find(
-                (item: { time: string | undefined }) => item.time === time,
-              );
-              if (existing) {
-                // If it exists, update the value with the new value
-                existing.value = value;
-              } else {
-                // If it doesn't exist, add it to the accumulator
-                acc.push({ time, value, count: 1 });
-              }
-              return acc;
-            },
-            [],
-          )
-          .map(({ time, value }: { time: string | undefined; value: any }) => ({
-            time,
-            value,
-          })) // Remove count from the final data
-      : [];
+  //             // Check if this time already exists in the accumulator
+  //             const existing = acc.find(
+  //               (item: { time: string | undefined }) => item.time === time,
+  //             );
+  //             if (existing) {
+  //               // If it exists, update the value with the new value
+  //               existing.value = value;
+  //             } else {
+  //               // If it doesn't exist, add it to the accumulator
+  //               acc.push({ time, value, count: 1 });
+  //             }
+  //             return acc;
+  //           },
+  //           [],
+  //         )
+  //         .map(({ time, value }: { time: string | undefined; value: any }) => ({
+  //           time,
+  //           value,
+  //         })) // Remove count from the final data
+  //     : [];
 
-    setChartData(data);
-  }, [portfolioData]);
+  //   setChartData(data);
+  // }, [portfolioData]);
 
   return (
     <div className="container mx-auto flex flex-col p-4">
@@ -79,7 +80,7 @@ const Dashboard: React.FC = () => {
         className="flex w-full flex-col items-center justify-center md:flex-row md:items-stretch"
       >
         <div className="mr-4 w-[100%] pb-8">
-          <ChartComponent data={chartData} />
+          {/* <ChartComponent data={chartData} /> */}
           <>
             <div className="w-full">
               <div className="ot ot flex w-full justify-between py-4 align-middle">
@@ -95,9 +96,7 @@ const Dashboard: React.FC = () => {
                 <Button className="w-full rounded bg-yellow px-4 py-2 ">
                   Manage Account
                 </Button>
-                <Button className="w-full rounded bg-green px-4 py-2">
-                  Fund your Account
-                </Button>
+                <AlpacaAuthButton />
                 <Button className="w-full rounded bg-orange px-4 py-2">
                   Liquidate All Positions
                 </Button>
