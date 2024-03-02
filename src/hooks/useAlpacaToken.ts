@@ -1,8 +1,3 @@
-// hook that takes the auth code from the url and sends it to the server/alpaca to get the access token
-// 1. get the auth code from the url
-// 2. use trpc to fetch the access token
-// 3. return the access token
-
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 
