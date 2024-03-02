@@ -39,8 +39,7 @@ const AlpacaAuthButton = () => {
 
   return (
     <Button className="w-full bg-yellow" onClick={handleRedirect}>
-      Authorize with{" "}
-      <img className="ml-2 w-[50%]" src="/alpacaLogo.png" alt="Alpaca Logo" />
+      <img className="ml-2 w-[100px]" src="/alpacaLogo.png" alt="Alpaca Logo" />
     </Button>
   );
 };

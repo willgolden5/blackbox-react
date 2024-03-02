@@ -67,14 +67,19 @@ const Dashboard: React.FC = () => {
 
   if (!session?.user.alpacaId) {
     return (
-      <div className="container mx-auto flex flex-col p-4">
+      <div className="flex h-screen w-full flex-col items-center justify-center p-4">
         <h1 className="text-left text-3xl font-bold">
           Hello {session?.user.name}!
         </h1>
-        <p className="mb-6">
-          Authorize with your Alpaca account below to begin trading.
+        <p className="text-lg font-light">
+          Link your Alpaca trading account to trade with Blackbox.
         </p>
-        <AlpacaAuthButton />
+        <div className="flex w-full justify-center py-2 align-middle font-semibold">
+          <p>- link with -</p>
+        </div>
+        <div className="w-[400px]">
+          <AlpacaAuthButton />
+        </div>
       </div>
     );
   }
