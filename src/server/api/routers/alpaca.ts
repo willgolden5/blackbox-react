@@ -5,7 +5,9 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import bcrypt from "bcrypt";
-import { useSession } from "next-auth/react";
+
+const CLIENT_ID = process.env.ALPACA_CLIENT_ID;
+const CLIENT_SECRET = process.env.ALPACA_CLIENT_SECRET;
 
 export const alpacaRouter = createTRPCRouter({
   create: protectedProcedure
@@ -75,5 +77,47 @@ export const alpacaRouter = createTRPCRouter({
         const data = await res.json();
         return data;
       });
+    }),
+  // this should be able to be used asynchonously
+  getAccessToken: publicProcedure
+    .input(z.object({ authCode: z.string() }))
+    .mutation(async ({ input }) => {
+      const redirectUrl =
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000/"
+          : "https://blackboxquant.com/";
+      const url = "https://api.alpaca.markets/oauth/token";
+      const body = new URLSearchParams({
+        grant_type: "authorization_code",
+        code: input.authCode,
+        client_id: CLIENT_ID || "",
+        client_secret: CLIENT_SECRET || "",
+        redirect_uri: redirectUrl,
+      });
+
+      console.log("body:", body);
+
+      console.log("body:", body);
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: body.toString(),
+        });
+
+        if (!response.ok) {
+          console.error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("data:", data);
+        return data; // This will be the JSON response.
+      } catch (error) {
+        console.error("Error fetching Alpaca token:", error);
+        throw error; // Ensure your tRPC error handling logic can handle this.
+      }
     }),
 });
