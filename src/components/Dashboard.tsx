@@ -10,64 +10,74 @@ type AccountData = {
   gains: string;
 };
 
+type ChartTimeframe = "5Min" | "15Min" | "1H" | "1D";
+
 const Dashboard: React.FC = () => {
   const [chartData, setChartData] = useState([]);
+  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>("1D");
   const [accountData, setAccountData] = useState({} as AccountData);
-  const { data: session } = useSession();
-  const { data: alpData } = api.alpaca.getAccount.useQuery();
-  const { data: portfolioData } = api.alpaca.getPortfolioHistory.useQuery();
+  const { data: session, update } = useSession();
+  const { mutate: getPortfolioHistory, data: portfolioData } =
+    api.alpaca.getPortfolioHistory.useMutation();
 
-  // useEffect(() => {
-  //   if (!portfolioData) return;
-  //   const gains =
-  //     parseFloat(portfolioData.equity[portfolioData.equity.length - 1]) -
-  //     parseFloat(portfolioData.equity[0]);
-  //   setAccountData({
-  //     value: parseFloat(
-  //       portfolioData.equity[portfolioData.equity.length - 1],
-  //     ).toFixed(2),
-  //     gains: gains.toFixed(2),
-  //   });
+  useEffect(() => {
+    getPortfolioHistory({ timeframe: chartTimeframe });
+  }, [chartTimeframe]);
 
-  //   console.log(portfolioData);
+  useEffect(() => {
+    if (!portfolioData) return;
 
-  //   const data = portfolioData.timestamp
-  //     ? portfolioData.timestamp
-  //         .reduce(
-  //           (
-  //             acc: { time: string | undefined; value: any; count: number }[],
-  //             ts: number,
-  //             index: string | number,
-  //           ) => {
-  //             // Convert timestamp to YYYY-MM-DD format
-  //             const time = new Date(ts * 1000).toISOString().split("T")[0];
-  //             const value = portfolioData.equity
-  //               ? portfolioData.equity[index]
-  //               : null;
+    const data = portfolioData.timestamp
+      ? portfolioData.timestamp
+          .reduce(
+            (
+              acc: { time: string | undefined; value: any; count: number }[],
+              ts: number,
+              index: string | number,
+            ) => {
+              // Convert timestamp to YYYY-MM-DD format
+              const time = new Date(ts * 1000).toISOString().split("T")[0];
+              const value = portfolioData.equity
+                ? portfolioData.equity[index]
+                : null;
 
-  //             // Check if this time already exists in the accumulator
-  //             const existing = acc.find(
-  //               (item: { time: string | undefined }) => item.time === time,
-  //             );
-  //             if (existing) {
-  //               // If it exists, update the value with the new value
-  //               existing.value = value;
-  //             } else {
-  //               // If it doesn't exist, add it to the accumulator
-  //               acc.push({ time, value, count: 1 });
-  //             }
-  //             return acc;
-  //           },
-  //           [],
-  //         )
-  //         .map(({ time, value }: { time: string | undefined; value: any }) => ({
-  //           time,
-  //           value,
-  //         })) // Remove count from the final data
-  //     : [];
+              // Check if this time already exists in the accumulator
+              const existing = acc.find(
+                (item: { time: string | undefined }) => item.time === time,
+              );
+              if (existing) {
+                // If it exists, update the value with the new value
+                existing.value = value;
+              } else {
+                // If it doesn't exist, add it to the accumulator
+                acc.push({ time, value, count: 1 });
+              }
+              return acc;
+            },
+            [],
+          )
+          .map(({ time, value }: { time: string | undefined; value: any }) => ({
+            time,
+            value,
+          })) // Remove count from the final data
+      : [];
 
-  //   setChartData(data);
-  // }, [portfolioData]);
+    setChartData(data);
+  }, [portfolioData]);
+
+  if (!session?.user.alpacaId) {
+    return (
+      <div className="container mx-auto flex flex-col p-4">
+        <h1 className="text-left text-3xl font-bold">
+          Hello {session?.user.name}!
+        </h1>
+        <p className="mb-6">
+          Authorize with your Alpaca account below to begin trading.
+        </p>
+        <AlpacaAuthButton />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto flex flex-col p-4">
@@ -80,12 +90,38 @@ const Dashboard: React.FC = () => {
         className="flex w-full flex-col items-center justify-center md:flex-row md:items-stretch"
       >
         <div className="mr-4 w-[100%] pb-8">
-          {/* <ChartComponent data={chartData} /> */}
+          <ChartComponent data={chartData} />
+          <div className="flex w-[25%] space-x-2">
+            <Button
+              className="h-8 w-1/5 text-xs font-light"
+              onClick={() => setChartTimeframe("1D")}
+            >
+              1D
+            </Button>
+            <Button
+              className="h-8 w-1/5 text-xs font-light"
+              onClick={() => setChartTimeframe("1H")}
+            >
+              1H
+            </Button>
+            <Button
+              className="h-8 w-1/5 text-xs font-light"
+              onClick={() => setChartTimeframe("15Min")}
+            >
+              15Min
+            </Button>
+            <Button
+              className="h-8 w-1/5 text-xs font-light"
+              onClick={() => setChartTimeframe("5Min")}
+            >
+              5Min
+            </Button>
+          </div>
           <>
             <div className="w-full">
               <div className="ot ot flex w-full justify-between py-4 align-middle">
-                <p className="pb-2">Current Value: ${accountData.value}</p>
-                <p className="pb-2">Gains: ($) {accountData.gains}</p>
+                {/* <p className="pb-2">Current Value: ${accountData.value}</p> */}
+                {/* <p className="pb-2">Gains: ($) {accountData.gains}</p> */}
                 {/* <p className="pb-2">Buying Power: ${alpData?.buying_power}</p> */}
               </div>
               <div className="flex w-full justify-between align-middle">
@@ -96,9 +132,11 @@ const Dashboard: React.FC = () => {
                 <Button className="w-full rounded bg-yellow px-4 py-2 ">
                   Manage Account
                 </Button>
-                <AlpacaAuthButton />
+                <Button className="w-full rounded bg-purple px-4 py-2">
+                  Halt Strategy
+                </Button>
                 <Button className="w-full rounded bg-orange px-4 py-2">
-                  Liquidate All Positions
+                  Close All Open Positions
                 </Button>
               </div>
             </div>

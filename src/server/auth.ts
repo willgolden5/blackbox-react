@@ -49,17 +49,30 @@ function compareAsync(param1: string, param2: string) {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       /* User table contents is exposed in tokens */
+      const fullUser = user as PrismaUser;
+      if (trigger === "update" && session?.alpacaId) {
+        token.alpacaId = session.alpacaId;
+        return token;
+      }
       if (user) {
-        const fullUser = user as PrismaUser;
         token.id = user.id;
         token.alpacaId = fullUser.alpacaId;
         token.joinDate = fullUser.joinDate;
       }
       return token;
     },
-    session({ session, token, user }) {
+    session({ session, token, newSession, trigger }) {
+      if (trigger === "update") {
+        console.log("session: ", session);
+        console.log("newSession: ", newSession);
+        // You can update the session in the database if it's not already updated.
+        // await adapter.updateUser(session.user.id, { name: newSession.name })
+
+        // Make sure the updated value is reflected on the client
+        session.user.alpacaId = newSession.alpacaId;
+      }
       if (session.user) {
         session.user.id = token.id as string;
         session.user.alpacaId = token.alpacaId as string;

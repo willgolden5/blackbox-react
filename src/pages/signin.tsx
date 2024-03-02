@@ -22,7 +22,6 @@ const SignIn = () => {
       password,
       redirect: false,
     }).then((res) => {
-      console.log(res);
       if (res?.status === 401) {
         toast("Error", "The login you've provided is invalid.", "error");
       }

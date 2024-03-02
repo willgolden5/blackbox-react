@@ -89,7 +89,6 @@ export const userRouter = createTRPCRouter({
   create: publicProcedure
     .input(
       z.object({
-        alpaca: alpacaCreateSchema,
         internal: z.object({
           name: z.string(),
           password: z.string(),
@@ -99,7 +98,7 @@ export const userRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { alpaca, internal } = input;
+      const { internal } = input;
       let error = null;
       bcrypt.genSalt(12, async function (err, salt) {
         bcrypt.hash(input.internal.password, salt, async function (err, hash) {
@@ -112,33 +111,6 @@ export const userRouter = createTRPCRouter({
                 email: internal.email,
                 phone: internal.phone,
               },
-            })
-            .then(async () => {
-              const response = await fetch(
-                `${process.env.ALPACA_BROKER_URL}/v1/accounts`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Basic ${process.env.ALPACA_BROKER_AUTH}`,
-                  },
-                  body: JSON.stringify(alpaca),
-                },
-              );
-              if (!response.ok) {
-                return "alpaca create error";
-              }
-              const alpacaResponse = await response.json();
-              await ctx.db.user.update({
-                where: {
-                  email: internal.email,
-                },
-                data: {
-                  alpacaId: alpacaResponse.id,
-                },
-              });
-
-              return "account created successfully";
             })
             .catch((err) => (error = err));
         });
