@@ -4,7 +4,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "~/components/DesignSystem/Button";
 import Newsletter from "~/components/InterestList";
 import { api } from "~/utils/api";
-import AboutPanel from "~/components/SignUpPanels/AboutPanel";
 import PanelOne from "~/components/SignUpPanels/PanelOne";
 
 interface IFormInput {
@@ -13,23 +12,6 @@ interface IFormInput {
   email: string;
   phoneNumber: string;
   password: string;
-  streetAddress: string[];
-  city: string;
-  state: string;
-  postalCode: string;
-  dateOfBirth: string;
-  taxId: string;
-  taxIdType: string;
-  countryOfTaxResidence: string;
-  fundingSource: string[];
-  employmentStatus: string;
-  employerName: string;
-  employmentPosition: string;
-  isControlPerson: boolean;
-  isAffiliatedExchangeOrFinra: boolean;
-  isPoliticallyExposed: boolean;
-  immediateFamilyExposed: boolean;
-  customerAgreementConsent: boolean;
 }
 
 const SignUp = () => {
