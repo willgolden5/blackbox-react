@@ -2,11 +2,14 @@ import { createOauthUrl } from "~/utils/alpaca";
 import Button from "./DesignSystem/Button";
 import { useRouter } from "next/router";
 import useAlpacaToken from "~/hooks/useAlpacaToken";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { api } from "~/utils/api";
 
 const AlpacaAuthButton = () => {
+  const [hasSetAlpacaId, setHasSetAlpacaId] = useState(false);
   const router = useRouter();
   const data = useAlpacaToken();
+  const { mutate: setAlpacaId, isLoading } = api.user.setAlpacaId.useMutation();
   const handleRedirect = () => {
     const url = createOauthUrl(
       process.env.NEXT_PUBLIC_ALPACA_CLIENT_ID as string,
@@ -21,9 +24,13 @@ const AlpacaAuthButton = () => {
   useEffect(() => {
     (async () => {
       const token = await data;
-      console.log("token:", token);
+      if (!isLoading && token.accessToken && !hasSetAlpacaId) {
+        setAlpacaId({ alpacaId: token.accessToken });
+        setHasSetAlpacaId(true);
+      }
     })();
-  }, [data]);
+  }, [data, isLoading]);
+
   return (
     <Button className="w-full bg-yellow" onClick={handleRedirect}>
       Authorize with{" "}

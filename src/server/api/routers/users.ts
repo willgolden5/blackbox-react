@@ -299,4 +299,17 @@ export const userRouter = createTRPCRouter({
           return "ok";
         });
     }),
+  setAlpacaId: protectedProcedure
+    .input(z.object({ alpacaId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      if (input.alpacaId.includes("undefined")) return;
+      return await ctx.db.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          alpacaId: input.alpacaId,
+        },
+      });
+    }),
 });
