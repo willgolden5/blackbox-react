@@ -1,16 +1,29 @@
 import { useRouter } from "next/router";
 import Button from "~/components/DesignSystem/Button";
+import { useToast } from "~/hooks/useToast";
 import { api } from "~/utils/api";
 
 export default function StrategyProfile() {
   const { asPath } = useRouter();
+  const router = useRouter();
+  const toast = useToast();
   const { mutateAsync: setStrategy } = api.user.setActiveStrategy.useMutation();
   const { data } = api.strategy.getInfoByName.useQuery({
     name: asPath.split("/")[2] as string,
   });
 
   const setActiveStrategy = () => {
-    setStrategy({ strategy: data?.name as string });
+    setStrategy({ strategy: data?.name as string }).then(() => {
+      toast(
+        "Strategy Activated!",
+        `You are now trading the ${data?.name
+          .split("_")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")} strategy.`,
+        "success",
+      );
+      router.push("/");
+    });
   };
 
   return (

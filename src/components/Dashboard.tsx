@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import Button from "./DesignSystem/Button";
 import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import ChartComponent from "./charts/LineChart";
 import AlpacaAuthButton from "./AlpacaAuthButton";
+import { useRouter } from "next/router";
+import { useToast } from "~/hooks/useToast";
 
 type AccountData = {
   value: string;
@@ -15,14 +17,29 @@ type ChartTimeframe = "5Min" | "15Min" | "1H" | "1D";
 const Dashboard: React.FC = () => {
   const [chartData, setChartData] = useState([]);
   const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>("1D");
-  const [accountData, setAccountData] = useState({} as AccountData);
-  const { data: session, update } = useSession();
+  const toast = useToast();
+  const router = useRouter();
+  // const [accountData, setAccountData] = useState({} as AccountData);
+  const { data: session } = useSession();
+  const { data: hasActiveStrategy, isLoading: strategyLoading } =
+    api.user.hasActiveStrategy.useQuery();
   const { mutate: getPortfolioHistory, data: portfolioData } =
     api.alpaca.getPortfolioHistory.useMutation();
+  const { mutate: clearActiveStrategies } =
+    api.user.removeActiveStrategy.useMutation();
 
   useEffect(() => {
     getPortfolioHistory({ timeframe: chartTimeframe });
   }, [chartTimeframe]);
+
+  const haltActiveStrategies = () => {
+    clearActiveStrategies();
+    toast(
+      "All Active Strategies Stopped!",
+      "You are no longer trading strategies with Blackbox.",
+      "info",
+    );
+  };
 
   useEffect(() => {
     if (!portfolioData) return;
@@ -64,6 +81,16 @@ const Dashboard: React.FC = () => {
 
     setChartData(data);
   }, [portfolioData]);
+
+  useEffect(() => {
+    if (!strategyLoading && hasActiveStrategy === null) {
+      toast(
+        "No Active Strategy",
+        "Select a strategy from the Strategies page to start trading.",
+        "info",
+      );
+    }
+  }, [hasActiveStrategy]);
 
   if (!session?.user.alpacaId) {
     return (
@@ -134,10 +161,21 @@ const Dashboard: React.FC = () => {
               </div>
 
               <div className="flex w-full flex-row space-x-5">
-                <Button className="w-full rounded bg-yellow px-4 py-2 ">
+                <Button
+                  onClick={() =>
+                    router.push(
+                      "https://app.alpaca.markets/brokerage/dashboard/overview",
+                      "_blank",
+                    )
+                  }
+                  className="w-full rounded bg-yellow px-4 py-2 "
+                >
                   Manage Account
                 </Button>
-                <Button className="w-full rounded bg-purple px-4 py-2">
+                <Button
+                  onClick={haltActiveStrategies}
+                  className="w-full rounded bg-purple px-4 py-2"
+                >
                   Halt Strategy
                 </Button>
                 <Button className="w-full rounded bg-orange px-4 py-2">

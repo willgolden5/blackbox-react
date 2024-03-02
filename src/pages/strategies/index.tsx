@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 const Strategies = () => {
   const router = useRouter();
   const { data: strategyInfo } = api.strategy.getStrategyCardInfo.useQuery();
-  console.log(strategyInfo);
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center">

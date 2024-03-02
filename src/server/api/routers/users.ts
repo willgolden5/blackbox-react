@@ -65,12 +65,6 @@ const disclosuresSchema = z.object({
   immediate_family_exposed: z.boolean(),
 });
 
-// const trustedContactSchema = z.object({
-//   given_name: z.string(),
-//   family_name: z.string(),
-//   email_address: z.string(),
-// });
-
 const agreementsSchema = z.object({
   agreement: z.string(),
   signed_at: z.string(),
@@ -132,102 +126,6 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
-
-  trade: protectedProcedure.input(tradeSchema).mutation(async ({ input }) => {
-    const response = await fetch(`${process.env.API_URL}/trade`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(input),
-    });
-
-    if (!response.ok) {
-      throw new Error("Error in trade");
-    }
-
-    return response.json();
-  }),
-  createACHRelationship: publicProcedure
-    .input(achRelationshipSchema)
-    .mutation(async ({ input }) => {
-      const response = await fetch(
-        `${process.env.API_URL}/create-ach-relationship`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(input),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Error in create ACH relationship");
-      }
-
-      return response.json();
-    }),
-
-  checkACHRelationship: publicProcedure
-    .input(checkAchRelationshipSchema)
-    .mutation(async ({ input }) => {
-      const response = await fetch(
-        `${process.env.API_URL}/check-ach-relationship`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(input),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Error in check ACH relationship");
-      }
-
-      return response.json();
-    }),
-
-  createACHTransfer: publicProcedure
-    .input(achTransferSchema)
-    .mutation(async ({ input }) => {
-      const response = await fetch(
-        `${process.env.API_URL}/create-ach-transfer`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(input),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Error in create ACH transfer");
-      }
-
-      return response.json();
-    }),
-
-  initiateACHTransfer: publicProcedure
-    .input(initiateAchTransferSchema)
-    .mutation(async ({ input }) => {
-      const response = await fetch(`${process.env.API_URL}/ach-transfer`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      });
-
-      if (!response.ok) {
-        throw new Error("Error in initiate ACH transfer");
-      }
-
-      return response.json();
-    }),
   interestSignup: publicProcedure
     .input(z.object({ email: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -237,30 +135,32 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+  hasActiveStrategy: protectedProcedure.query(async ({ ctx }) => {
+    const temp = await ctx.db.activeStrategies.findFirst({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+    console.log(temp);
+    return temp;
+  }),
   setActiveStrategy: protectedProcedure
     .input(z.object({ strategy: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const data = await fetch(
-        `${process.env.API_URL}/account/?id=${ctx.session.user.alpacaId}`,
-      ).then(async (res) => {
-        const data = await res.json();
-        return data;
-      });
-
       return await ctx.db.activeStrategies
         .upsert({
           where: {
             userId: ctx.session.user.id,
           },
           update: {
-            strategyId: input.strategy,
-            amount: parseFloat(data.last_equity),
+            strategyId: "congress_buys",
+            amount: 1000,
           },
           create: {
             userId: ctx.session.user.id,
             alpacaid: ctx.session.user.alpacaId,
-            amount: parseFloat(data.last_equity),
-            strategyId: input.strategy,
+            amount: 1000,
+            strategyId: "congress_buys",
           },
         })
         .then(async () => {
@@ -271,6 +171,13 @@ export const userRouter = createTRPCRouter({
           return "ok";
         });
     }),
+  removeActiveStrategy: protectedProcedure.mutation(async ({ ctx }) => {
+    return await ctx.db.activeStrategies.delete({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
   setAlpacaId: protectedProcedure
     .input(z.object({ alpacaId: z.string() }))
     .mutation(async ({ ctx, input }) => {
