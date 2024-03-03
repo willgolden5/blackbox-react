@@ -59,7 +59,6 @@ const SignUp = () => {
               errors={errors}
               register={register}
             />
-
             <div className="w-full max-w-md">
               <div className="flex w-full max-w-md space-x-2">
                 <Button type="submit" className=" w-full bg-green">

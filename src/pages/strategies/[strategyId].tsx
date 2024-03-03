@@ -8,18 +8,29 @@ export default function StrategyProfile() {
   const router = useRouter();
   const toast = useToast();
   const { mutateAsync: setStrategy } = api.user.setActiveStrategy.useMutation();
+  const { data: alpacaAccount } = api.alpaca.getAccountData.useQuery();
   const { data } = api.strategy.getInfoByName.useQuery({
     name: asPath.split("/")[2] as string,
   });
 
   const setActiveStrategy = () => {
-    setStrategy({ strategy: data?.name as string }).then(() => {
+    if (!alpacaAccount) {
+      toast(
+        "No Alpaca Account Found",
+        "Please connect your Alpaca account before trading.",
+        "error",
+      );
+    }
+    setStrategy({
+      strategy: data?.name as string,
+      amount: parseFloat(alpacaAccount?.buying_power as string),
+    }).then(() => {
       toast(
         "Strategy Activated!",
         `You are now trading the ${data?.name
           .split("_")
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ")} strategy.`,
+          .join(" ")} strategy on Blackbox.`,
         "success",
       );
       router.push("/");

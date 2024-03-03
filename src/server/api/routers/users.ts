@@ -5,6 +5,7 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import bcrypt from "bcrypt";
+import { StrategyActivationResponse } from "~/utils/alpaca";
 
 export const userRouter = createTRPCRouter({
   create: publicProcedure
@@ -72,7 +73,7 @@ export const userRouter = createTRPCRouter({
     return temp;
   }),
   setActiveStrategy: protectedProcedure
-    .input(z.object({ strategy: z.string() }))
+    .input(z.object({ strategy: z.string(), amount: z.number() }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.activeStrategies
         .upsert({
@@ -80,23 +81,31 @@ export const userRouter = createTRPCRouter({
             userId: ctx.session.user.id,
           },
           update: {
-            strategyId: "congress_buys",
-            amount: 1000,
+            strategyId: input.strategy,
+            amount: input.amount,
           },
           create: {
             userId: ctx.session.user.id,
             alpacaid: ctx.session.user.alpacaId,
-            amount: 1000,
-            strategyId: "congress_buys",
+            amount: input.amount,
+            strategyId: input.strategy,
           },
         })
-        .then(async () => {
-          const response = await fetch(
-            `${process.env.API_URL}/rebalance?alpacaId=${ctx.session.user.alpacaId}`,
-          );
-          console.log(response);
-          return "ok";
-        });
+        .then(async (data) => {
+          await fetch(
+            `${process.env.API_URL}/rebalance?activeStrategyId=${data.id}`,
+            {
+              headers: {
+                "X-API-KEY": process.env.API_KEY || "",
+              },
+            },
+          )
+            .then((res) => console.log("Success rebalance. Response: ", res))
+            .catch((err) => console.error("Error rebalancing. Error: ", err));
+        })
+        .catch((err) =>
+          console.error("Error setting Active Strategy. Error: ", err),
+        );
     }),
   removeActiveStrategy: protectedProcedure.mutation(async ({ ctx }) => {
     return await ctx.db.activeStrategies.delete({

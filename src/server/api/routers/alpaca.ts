@@ -4,6 +4,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { AlpacaAccountResponse } from "~/utils/alpaca";
 
 const CLIENT_ID = process.env.ALPACA_CLIENT_ID;
 const CLIENT_SECRET = process.env.ALPACA_CLIENT_SECRET;
@@ -70,4 +71,17 @@ export const alpacaRouter = createTRPCRouter({
         console.error("Error fetching Alpaca token:", error);
       }
     }),
+  getAccountData: protectedProcedure.query(async ({ ctx }) => {
+    const response = await fetch("https://api.alpaca.markets/v2/account", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${ctx.session.user.alpacaId}`,
+      },
+    });
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data as AlpacaAccountResponse;
+  }),
 });
