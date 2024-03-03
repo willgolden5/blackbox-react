@@ -5,7 +5,6 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 import bcrypt from "bcrypt";
-import { StrategyActivationResponse } from "~/utils/alpaca";
 
 export const userRouter = createTRPCRouter({
   create: publicProcedure
